@@ -1,0 +1,10 @@
+{
+  // An array of language ids which should be validated by ESLint
+  "eslint.validate": [
+      "javascript",
+      "javascriptreact",
+      { "language": "vue", "autoFix": true }
+  ],
+  "eslint.autoFixOnSave": true,
+  "vetur.validation.template": false
+}
