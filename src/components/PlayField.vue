@@ -6,10 +6,11 @@
 
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator"
+import BoardConfigs from "../BoardConfigs"
 
 @Component
 export default class PlayField extends Vue {
-  @Prop() configs!: any
+  @Prop() configs!: BoardConfigs
 
   isBlockFilled!: boolean[][]
   colorBoard!: string[][]
