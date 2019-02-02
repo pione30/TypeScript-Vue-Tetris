@@ -7,7 +7,7 @@
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator"
 import PlayField from "./PlayField.vue"
-import BoardConfigs from "../BoardConfigs"
+import BoardConfigs from "../@types/BoardConfigs"
 
 @Component({
   components: {
