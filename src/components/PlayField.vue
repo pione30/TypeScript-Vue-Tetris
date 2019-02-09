@@ -16,6 +16,7 @@ export default class PlayField extends Vue {
 
   isBlockFilled!: boolean[][]
   colorBoard!: string[][]
+  rotation: number = 0
 
   mounted(): void {
     const canvas: HTMLCanvasElement = document.getElementById(
@@ -62,30 +63,57 @@ export default class PlayField extends Vue {
 
     const execCurrentTurn = (currentY: number, milliseconds: number): void => {
       const currentX: number = Math.floor(this.configs.width / 2)
-      context.fillStyle = "green"
-      context.fillRect(
-        currentX * unitWidth,
-        currentY * unitHeight,
-        unitWidth,
-        unitHeight
-      )
+
+      // draw tetromino
+      context.fillStyle = this.tetromino.color
+      for (const [dy, row] of this.tetromino.blocks[this.rotation].entries()) {
+        for (const [dx, blockElement] of row.entries()) {
+          if (blockElement != 0) {
+            context.fillRect(
+              (currentX + dx) * unitWidth,
+              (currentY + dy) * unitHeight,
+              unitWidth,
+              unitHeight
+            )
+          }
+        }
+      }
 
       setTimeout(() => {
-        if (!this.isBlockFilled[currentY + 1][currentX]) {
-          context.clearRect(
-            currentX * unitWidth,
-            currentY * unitHeight,
-            unitWidth,
-            unitHeight
-          )
-          context.strokeRect(
-            currentX * unitWidth,
-            currentY * unitHeight,
-            unitWidth,
-            unitHeight
-          )
-          execCurrentTurn(currentY + 1, milliseconds)
+        // return if the tetromino can not move down any more
+        for (const [dy, row] of this.tetromino.blocks[
+          this.rotation
+        ].entries()) {
+          for (const [dx, blockElement] of row.entries()) {
+            if (blockElement != 0) {
+              if (this.isBlockFilled[currentY + dy + 1][currentX + dx]) return
+            }
+          }
         }
+
+        // clear current tetromino
+        for (const [dy, row] of this.tetromino.blocks[
+          this.rotation
+        ].entries()) {
+          for (const [dx, blockElement] of row.entries()) {
+            if (blockElement != 0) {
+              context.clearRect(
+                (currentX + dx) * unitWidth,
+                (currentY + dy) * unitHeight,
+                unitWidth,
+                unitHeight
+              )
+              context.strokeRect(
+                (currentX + dx) * unitWidth,
+                (currentY + dy) * unitHeight,
+                unitWidth,
+                unitHeight
+              )
+            }
+          }
+        }
+
+        execCurrentTurn(currentY + 1, milliseconds)
       }, milliseconds)
     }
     execCurrentTurn(1, 1000)
