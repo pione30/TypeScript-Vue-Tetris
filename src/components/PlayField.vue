@@ -7,10 +7,12 @@
 <script lang="ts">
 import { Vue, Component, Prop } from "vue-property-decorator"
 import BoardConfigs from "../@types/BoardConfigs"
+import Tetromino from "../@types/Tetromino"
 
 @Component
 export default class PlayField extends Vue {
   @Prop() configs!: BoardConfigs
+  @Prop() tetromino!: Tetromino
 
   isBlockFilled!: boolean[][]
   colorBoard!: string[][]

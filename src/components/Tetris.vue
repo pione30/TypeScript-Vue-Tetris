@@ -1,6 +1,6 @@
 <template>
   <div>
-    <play-field :configs="configs" />
+    <play-field :configs="configs" :tetromino="tetromino" />
   </div>
 </template>
 
@@ -8,6 +8,8 @@
 import { Vue, Component } from "vue-property-decorator"
 import PlayField from "./PlayField.vue"
 import BoardConfigs from "../@types/BoardConfigs"
+import Tetromino from "../@types/Tetromino"
+import { Tetrominos } from "../Tetrominos"
 
 @Component({
   components: {
@@ -20,6 +22,9 @@ export default class TetrisComponent extends Vue {
     width: 10 + 2,
     height: 20 + 2
   }
+
+  tetromino: Tetromino =
+    Tetrominos[Math.floor(Math.random() * Tetrominos.length)]
 }
 </script>
 
