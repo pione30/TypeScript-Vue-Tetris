@@ -1,5 +1,5 @@
-import Tetrimino from "./@types/Tetrimino"
-export const Tetriminos: Tetrimino[] = [
+import Tetromino from "./@types/Tetromino"
+export const Tetrominos: Tetromino[] = [
   {
     name: "I",
     color: "red",
