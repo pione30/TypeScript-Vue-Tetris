@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator"
+import { Vue, Component, Prop, Watch } from "vue-property-decorator"
 import BoardConfigs from "../@types/BoardConfigs"
 import Tetromino from "../@types/Tetromino"
 
@@ -71,13 +71,16 @@ export default class PlayField extends Vue {
         )
       }
     }
+  }
 
+  @Watch("tetromino")
+  onTetrominoChange(newTetromino: Tetromino, oldTetromino: Tetromino): void {
     const execCurrentTurn = (currentY: number, milliseconds: number): void => {
       const currentX: number = Math.floor(this.configs.width / 2)
 
       // draw tetromino
-      this.context.fillStyle = this.tetromino.color
-      for (const [dy, row] of this.tetromino.blocks[this.rotation].entries()) {
+      this.context.fillStyle = newTetromino.color
+      for (const [dy, row] of newTetromino.blocks[this.rotation].entries()) {
         for (const [dx, blockElement] of row.entries()) {
           if (blockElement != 0) {
             this.context.fillRect(
@@ -92,9 +95,7 @@ export default class PlayField extends Vue {
 
       setTimeout(() => {
         // return if the tetromino can not move down any more
-        for (const [dy, row] of this.tetromino.blocks[
-          this.rotation
-        ].entries()) {
+        for (const [dy, row] of newTetromino.blocks[this.rotation].entries()) {
           for (const [dx, blockElement] of row.entries()) {
             if (blockElement != 0) {
               if (this.isBlockFilled[currentY + dy + 1][currentX + dx]) return
@@ -103,9 +104,7 @@ export default class PlayField extends Vue {
         }
 
         // clear current tetromino
-        for (const [dy, row] of this.tetromino.blocks[
-          this.rotation
-        ].entries()) {
+        for (const [dy, row] of newTetromino.blocks[this.rotation].entries()) {
           for (const [dx, blockElement] of row.entries()) {
             if (blockElement != 0) {
               this.context.clearRect(

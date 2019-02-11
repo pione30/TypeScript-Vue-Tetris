@@ -23,8 +23,15 @@ export default class TetrisComponent extends Vue {
     height: 20 + 2
   }
 
-  tetromino: Tetromino =
-    Tetrominos[Math.floor(Math.random() * Tetrominos.length)]
+  tetromino: Tetromino = {
+    name: "",
+    color: "",
+    blocks: [[[]]]
+  }
+
+  mounted(): void {
+    this.tetromino = Tetrominos[Math.floor(Math.random() * Tetrominos.length)]
+  }
 }
 </script>
 
