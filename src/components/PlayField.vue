@@ -76,7 +76,7 @@ export default class PlayField extends Vue {
   @Watch("tetromino")
   onTetrominoChange(newTetromino: Tetromino, oldTetromino: Tetromino): void {
     const execCurrentTurn = (currentY: number, milliseconds: number): void => {
-      const currentX: number = Math.floor(this.configs.width / 2)
+      const currentX: number = Math.floor(this.configs.width / 2) - 1
 
       // draw tetromino
       this.context.fillStyle = newTetromino.color
