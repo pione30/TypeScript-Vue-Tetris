@@ -18,14 +18,13 @@ export default class PlayField extends Vue {
   colorBoard!: string[][]
   rotation: number = 0
 
-  mounted(): void {
-    const canvas: HTMLCanvasElement = document.getElementById(
-      "canvas"
-    ) as HTMLCanvasElement
-    const context: CanvasRenderingContext2D = canvas.getContext(
-      "2d"
-    ) as CanvasRenderingContext2D
+  canvas!: HTMLCanvasElement
+  context!: CanvasRenderingContext2D
 
+  unitWidth!: number
+  unitHeight!: number
+
+  mounted(): void {
     // initialize the board
     this.isBlockFilled = Array.from(new Array(this.configs.height), () =>
       new Array(this.configs.width).fill(false)
@@ -48,16 +47,28 @@ export default class PlayField extends Vue {
       this.colorBoard[y][this.configs.width - 1] = "black"
     }
 
-    const unitWidth: number = canvas.width / this.configs.width
-    const unitHeight: number = canvas.height / this.configs.height
+    this.canvas = document.getElementById("canvas") as HTMLCanvasElement
+    this.context = this.canvas.getContext("2d") as CanvasRenderingContext2D
+    this.unitWidth = this.canvas.width / this.configs.width
+    this.unitHeight = this.canvas.height / this.configs.height
 
     // draw grid
-    context.strokeStyle = "gray"
+    this.context.strokeStyle = "gray"
     for (let y = 0; y < this.configs.height; y++) {
       for (let x = 0; x < this.configs.width; x++) {
-        context.fillStyle = this.colorBoard[y][x]
-        context.fillRect(x * unitWidth, y * unitHeight, unitWidth, unitHeight)
-        context.strokeRect(x * unitWidth, y * unitHeight, unitWidth, unitHeight)
+        this.context.fillStyle = this.colorBoard[y][x]
+        this.context.fillRect(
+          x * this.unitWidth,
+          y * this.unitHeight,
+          this.unitWidth,
+          this.unitHeight
+        )
+        this.context.strokeRect(
+          x * this.unitWidth,
+          y * this.unitHeight,
+          this.unitWidth,
+          this.unitHeight
+        )
       }
     }
 
@@ -65,15 +76,15 @@ export default class PlayField extends Vue {
       const currentX: number = Math.floor(this.configs.width / 2)
 
       // draw tetromino
-      context.fillStyle = this.tetromino.color
+      this.context.fillStyle = this.tetromino.color
       for (const [dy, row] of this.tetromino.blocks[this.rotation].entries()) {
         for (const [dx, blockElement] of row.entries()) {
           if (blockElement != 0) {
-            context.fillRect(
-              (currentX + dx) * unitWidth,
-              (currentY + dy) * unitHeight,
-              unitWidth,
-              unitHeight
+            this.context.fillRect(
+              (currentX + dx) * this.unitWidth,
+              (currentY + dy) * this.unitHeight,
+              this.unitWidth,
+              this.unitHeight
             )
           }
         }
@@ -97,17 +108,17 @@ export default class PlayField extends Vue {
         ].entries()) {
           for (const [dx, blockElement] of row.entries()) {
             if (blockElement != 0) {
-              context.clearRect(
-                (currentX + dx) * unitWidth,
-                (currentY + dy) * unitHeight,
-                unitWidth,
-                unitHeight
+              this.context.clearRect(
+                (currentX + dx) * this.unitWidth,
+                (currentY + dy) * this.unitHeight,
+                this.unitWidth,
+                this.unitHeight
               )
-              context.strokeRect(
-                (currentX + dx) * unitWidth,
-                (currentY + dy) * unitHeight,
-                unitWidth,
-                unitHeight
+              this.context.strokeRect(
+                (currentX + dx) * this.unitWidth,
+                (currentY + dy) * this.unitHeight,
+                this.unitWidth,
+                this.unitHeight
               )
             }
           }
