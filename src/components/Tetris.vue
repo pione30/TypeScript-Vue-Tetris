@@ -1,6 +1,10 @@
 <template>
   <div>
-    <play-field :configs="configs" :tetromino="tetromino" />
+    <play-field
+      :configs="configs"
+      :tetromino="tetromino"
+      @tetromino-grounded="popNextTetromino"
+    />
   </div>
 </template>
 
@@ -30,6 +34,10 @@ export default class TetrisComponent extends Vue {
   }
 
   mounted(): void {
+    this.popNextTetromino()
+  }
+
+  popNextTetromino(): void {
     this.tetromino = Tetrominos[Math.floor(Math.random() * Tetrominos.length)]
   }
 }
