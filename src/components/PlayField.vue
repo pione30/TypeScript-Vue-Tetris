@@ -114,19 +114,19 @@ export default class PlayField extends Vue {
   }
 
   @Watch("tetromino")
-  onTetrominoChange(newTetromino: Tetromino, oldTetromino: Tetromino): void {
+  onTetrominoChange(): void {
     const execCurrentTurn = (milliseconds: number): Promise<string> =>
       new Promise((resolve, reject) => {
         this.drawTetromino()
 
         setTimeout(() => {
           // return if the tetromino can not move down any more
-          for (const [dy, row] of newTetromino.blocks[this.rotation].entries()) {
+          for (const [dy, row] of this.tetromino.blocks[this.rotation].entries()) {
             for (const [dx, blockElement] of row.entries()) {
               if (blockElement != 0) {
                 if (this.isBlockFilled[this.currentY + dy + 1][this.currentX + dx]) {
                   // fill isBlockFilled with current tetromino
-                  for (const [tmpdy, tmprow] of newTetromino.blocks[this.rotation].entries()) {
+                  for (const [tmpdy, tmprow] of this.tetromino.blocks[this.rotation].entries()) {
                     for (const [tmpdx, tmpblockElement] of tmprow.entries()) {
                       if (tmpblockElement != 0) {
                         this.isBlockFilled[this.currentY + tmpdy][this.currentX + tmpdx] = true
