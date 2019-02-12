@@ -100,14 +100,10 @@ export default class PlayField extends Vue {
             if (blockElement != 0) {
               if (this.isBlockFilled[currentY + dy + 1][currentX + dx]) {
                 // fill isBlockFilled with current tetromino
-                for (const [tmpdy, tmprow] of newTetromino.blocks[
-                  this.rotation
-                ].entries()) {
+                for (const [tmpdy, tmprow] of newTetromino.blocks[this.rotation].entries()) {
                   for (const [tmpdx, tmpblockElement] of tmprow.entries()) {
                     if (tmpblockElement != 0) {
-                      this.isBlockFilled[currentY + tmpdy][
-                        currentX + tmpdx
-                      ] = true
+                      this.isBlockFilled[currentY + tmpdy][currentX + tmpdx] = true
                     }
                   }
                 }

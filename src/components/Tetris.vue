@@ -1,10 +1,6 @@
 <template>
   <div>
-    <play-field
-      :configs="configs"
-      :tetromino="tetromino"
-      @tetromino-grounded="popNextTetromino"
-    />
+    <play-field :configs="configs" :tetromino="tetromino" @tetromino-grounded="popNextTetromino" />
   </div>
 </template>
 
