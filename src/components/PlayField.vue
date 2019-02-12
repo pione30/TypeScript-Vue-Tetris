@@ -76,24 +76,48 @@ export default class PlayField extends Vue {
     }
   }
 
+  drawTetromino(): void {
+    this.context.fillStyle = this.tetromino.color
+    for (const [dy, row] of this.tetromino.blocks[this.rotation].entries()) {
+      for (const [dx, blockElement] of row.entries()) {
+        if (blockElement != 0) {
+          this.context.fillRect(
+            (this.currentX + dx) * this.unitWidth,
+            (this.currentY + dy) * this.unitHeight,
+            this.unitWidth,
+            this.unitHeight
+          )
+        }
+      }
+    }
+  }
+
+  clearTetromino(): void {
+    for (const [dy, row] of this.tetromino.blocks[this.rotation].entries()) {
+      for (const [dx, blockElement] of row.entries()) {
+        if (blockElement != 0) {
+          this.context.clearRect(
+            (this.currentX + dx) * this.unitWidth,
+            (this.currentY + dy) * this.unitHeight,
+            this.unitWidth,
+            this.unitHeight
+          )
+          this.context.strokeRect(
+            (this.currentX + dx) * this.unitWidth,
+            (this.currentY + dy) * this.unitHeight,
+            this.unitWidth,
+            this.unitHeight
+          )
+        }
+      }
+    }
+  }
+
   @Watch("tetromino")
   onTetrominoChange(newTetromino: Tetromino, oldTetromino: Tetromino): void {
     const execCurrentTurn = (milliseconds: number): Promise<string> =>
       new Promise((resolve, reject) => {
-        // draw tetromino
-        this.context.fillStyle = newTetromino.color
-        for (const [dy, row] of newTetromino.blocks[this.rotation].entries()) {
-          for (const [dx, blockElement] of row.entries()) {
-            if (blockElement != 0) {
-              this.context.fillRect(
-                (this.currentX + dx) * this.unitWidth,
-                (this.currentY + dy) * this.unitHeight,
-                this.unitWidth,
-                this.unitHeight
-              )
-            }
-          }
-        }
+        this.drawTetromino()
 
         setTimeout(() => {
           // return if the tetromino can not move down any more
@@ -116,25 +140,7 @@ export default class PlayField extends Vue {
             }
           }
 
-          // clear current tetromino
-          for (const [dy, row] of newTetromino.blocks[this.rotation].entries()) {
-            for (const [dx, blockElement] of row.entries()) {
-              if (blockElement != 0) {
-                this.context.clearRect(
-                  (this.currentX + dx) * this.unitWidth,
-                  (this.currentY + dy) * this.unitHeight,
-                  this.unitWidth,
-                  this.unitHeight
-                )
-                this.context.strokeRect(
-                  (this.currentX + dx) * this.unitWidth,
-                  (this.currentY + dy) * this.unitHeight,
-                  this.unitWidth,
-                  this.unitHeight
-                )
-              }
-            }
-          }
+          this.clearTetromino()
 
           this.currentY++
           execCurrentTurn(milliseconds)
