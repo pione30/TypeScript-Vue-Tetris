@@ -74,6 +74,16 @@ export default class PlayField extends Vue {
         )
       }
     }
+
+    window.addEventListener("keydown", event => {
+      if (event.keyCode === 37) {
+        event.preventDefault()
+        this.moveLeft()
+      } else if (event.keyCode === 39) {
+        event.preventDefault()
+        this.moveRight()
+      }
+    })
   }
 
   drawTetromino(): void {
@@ -162,6 +172,33 @@ export default class PlayField extends Vue {
       .catch(() => {
         console.error("Something went wrong")
       })
+  }
+
+  moveLeft(): void {
+    for (const [dy, row] of this.tetromino.blocks[this.rotation].entries()) {
+      for (const [dx, blockElement] of row.entries()) {
+        if (blockElement != 0) {
+          if (this.isBlockFilled[this.currentY + dy][this.currentX + dx - 1]) return
+        }
+      }
+    }
+
+    this.clearTetromino()
+    this.currentX--
+    this.drawTetromino()
+  }
+  moveRight(): void {
+    for (const [dy, row] of this.tetromino.blocks[this.rotation].entries()) {
+      for (const [dx, blockElement] of row.entries()) {
+        if (blockElement != 0) {
+          if (this.isBlockFilled[this.currentY + dy][this.currentX + dx + 1]) return
+        }
+      }
+    }
+
+    this.clearTetromino()
+    this.currentX++
+    this.drawTetromino()
   }
 }
 </script>
