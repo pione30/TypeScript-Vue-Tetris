@@ -75,69 +75,83 @@ export default class PlayField extends Vue {
 
   @Watch("tetromino")
   onTetrominoChange(newTetromino: Tetromino, oldTetromino: Tetromino): void {
-    const execCurrentTurn = (currentY: number, milliseconds: number): void => {
-      const currentX: number = Math.floor(this.configs.width / 2) - 1
+    const execCurrentTurn = (currentY: number, milliseconds: number): Promise<string> =>
+      new Promise((resolve, reject) => {
+        const currentX: number = Math.floor(this.configs.width / 2) - 1
 
-      // draw tetromino
-      this.context.fillStyle = newTetromino.color
-      for (const [dy, row] of newTetromino.blocks[this.rotation].entries()) {
-        for (const [dx, blockElement] of row.entries()) {
-          if (blockElement != 0) {
-            this.context.fillRect(
-              (currentX + dx) * this.unitWidth,
-              (currentY + dy) * this.unitHeight,
-              this.unitWidth,
-              this.unitHeight
-            )
-          }
-        }
-      }
-
-      setTimeout(() => {
-        // return if the tetromino can not move down any more
+        // draw tetromino
+        this.context.fillStyle = newTetromino.color
         for (const [dy, row] of newTetromino.blocks[this.rotation].entries()) {
           for (const [dx, blockElement] of row.entries()) {
             if (blockElement != 0) {
-              if (this.isBlockFilled[currentY + dy + 1][currentX + dx]) {
-                // fill isBlockFilled with current tetromino
-                for (const [tmpdy, tmprow] of newTetromino.blocks[this.rotation].entries()) {
-                  for (const [tmpdx, tmpblockElement] of tmprow.entries()) {
-                    if (tmpblockElement != 0) {
-                      this.isBlockFilled[currentY + tmpdy][currentX + tmpdx] = true
+              this.context.fillRect(
+                (currentX + dx) * this.unitWidth,
+                (currentY + dy) * this.unitHeight,
+                this.unitWidth,
+                this.unitHeight
+              )
+            }
+          }
+        }
+
+        setTimeout(() => {
+          // return if the tetromino can not move down any more
+          for (const [dy, row] of newTetromino.blocks[this.rotation].entries()) {
+            for (const [dx, blockElement] of row.entries()) {
+              if (blockElement != 0) {
+                if (this.isBlockFilled[currentY + dy + 1][currentX + dx]) {
+                  // fill isBlockFilled with current tetromino
+                  for (const [tmpdy, tmprow] of newTetromino.blocks[this.rotation].entries()) {
+                    for (const [tmpdx, tmpblockElement] of tmprow.entries()) {
+                      if (tmpblockElement != 0) {
+                        this.isBlockFilled[currentY + tmpdy][currentX + tmpdx] = true
+                      }
                     }
                   }
+                  resolve("grounded")
+                  return
                 }
-                this.$emit("tetromino-grounded")
-                return
               }
             }
           }
-        }
 
-        // clear current tetromino
-        for (const [dy, row] of newTetromino.blocks[this.rotation].entries()) {
-          for (const [dx, blockElement] of row.entries()) {
-            if (blockElement != 0) {
-              this.context.clearRect(
-                (currentX + dx) * this.unitWidth,
-                (currentY + dy) * this.unitHeight,
-                this.unitWidth,
-                this.unitHeight
-              )
-              this.context.strokeRect(
-                (currentX + dx) * this.unitWidth,
-                (currentY + dy) * this.unitHeight,
-                this.unitWidth,
-                this.unitHeight
-              )
+          // clear current tetromino
+          for (const [dy, row] of newTetromino.blocks[this.rotation].entries()) {
+            for (const [dx, blockElement] of row.entries()) {
+              if (blockElement != 0) {
+                this.context.clearRect(
+                  (currentX + dx) * this.unitWidth,
+                  (currentY + dy) * this.unitHeight,
+                  this.unitWidth,
+                  this.unitHeight
+                )
+                this.context.strokeRect(
+                  (currentX + dx) * this.unitWidth,
+                  (currentY + dy) * this.unitHeight,
+                  this.unitWidth,
+                  this.unitHeight
+                )
+              }
             }
           }
-        }
 
-        execCurrentTurn(currentY + 1, milliseconds)
-      }, milliseconds)
-    }
+          execCurrentTurn(currentY + 1, milliseconds)
+            .then(() => {
+              resolve("grounded")
+            })
+            .catch(() => {
+              console.error("Something went wrong")
+            })
+        }, milliseconds)
+      })
+
     execCurrentTurn(1, 1000)
+      .then(() => {
+        this.$emit("tetromino-grounded")
+      })
+      .catch(() => {
+        console.error("Something went wrong")
+      })
   }
 }
 </script>
