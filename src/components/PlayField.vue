@@ -24,6 +24,9 @@ export default class PlayField extends Vue {
   unitWidth!: number
   unitHeight!: number
 
+  currentX: number = Math.floor(this.configs.width / 2) - 1
+  currentY: number = 1
+
   mounted(): void {
     // initialize the board
     this.isBlockFilled = Array.from(new Array(this.configs.height), () =>
@@ -75,18 +78,16 @@ export default class PlayField extends Vue {
 
   @Watch("tetromino")
   onTetrominoChange(newTetromino: Tetromino, oldTetromino: Tetromino): void {
-    const execCurrentTurn = (currentY: number, milliseconds: number): Promise<string> =>
+    const execCurrentTurn = (milliseconds: number): Promise<string> =>
       new Promise((resolve, reject) => {
-        const currentX: number = Math.floor(this.configs.width / 2) - 1
-
         // draw tetromino
         this.context.fillStyle = newTetromino.color
         for (const [dy, row] of newTetromino.blocks[this.rotation].entries()) {
           for (const [dx, blockElement] of row.entries()) {
             if (blockElement != 0) {
               this.context.fillRect(
-                (currentX + dx) * this.unitWidth,
-                (currentY + dy) * this.unitHeight,
+                (this.currentX + dx) * this.unitWidth,
+                (this.currentY + dy) * this.unitHeight,
                 this.unitWidth,
                 this.unitHeight
               )
@@ -99,12 +100,12 @@ export default class PlayField extends Vue {
           for (const [dy, row] of newTetromino.blocks[this.rotation].entries()) {
             for (const [dx, blockElement] of row.entries()) {
               if (blockElement != 0) {
-                if (this.isBlockFilled[currentY + dy + 1][currentX + dx]) {
+                if (this.isBlockFilled[this.currentY + dy + 1][this.currentX + dx]) {
                   // fill isBlockFilled with current tetromino
                   for (const [tmpdy, tmprow] of newTetromino.blocks[this.rotation].entries()) {
                     for (const [tmpdx, tmpblockElement] of tmprow.entries()) {
                       if (tmpblockElement != 0) {
-                        this.isBlockFilled[currentY + tmpdy][currentX + tmpdx] = true
+                        this.isBlockFilled[this.currentY + tmpdy][this.currentX + tmpdx] = true
                       }
                     }
                   }
@@ -120,14 +121,14 @@ export default class PlayField extends Vue {
             for (const [dx, blockElement] of row.entries()) {
               if (blockElement != 0) {
                 this.context.clearRect(
-                  (currentX + dx) * this.unitWidth,
-                  (currentY + dy) * this.unitHeight,
+                  (this.currentX + dx) * this.unitWidth,
+                  (this.currentY + dy) * this.unitHeight,
                   this.unitWidth,
                   this.unitHeight
                 )
                 this.context.strokeRect(
-                  (currentX + dx) * this.unitWidth,
-                  (currentY + dy) * this.unitHeight,
+                  (this.currentX + dx) * this.unitWidth,
+                  (this.currentY + dy) * this.unitHeight,
                   this.unitWidth,
                   this.unitHeight
                 )
@@ -135,7 +136,8 @@ export default class PlayField extends Vue {
             }
           }
 
-          execCurrentTurn(currentY + 1, milliseconds)
+          this.currentY++
+          execCurrentTurn(milliseconds)
             .then(() => {
               resolve("grounded")
             })
@@ -145,7 +147,9 @@ export default class PlayField extends Vue {
         }, milliseconds)
       })
 
-    execCurrentTurn(1, 1000)
+    this.currentX = Math.floor(this.configs.width / 2) - 1
+    this.currentY = 1
+    execCurrentTurn(1000)
       .then(() => {
         this.$emit("tetromino-grounded")
       })
