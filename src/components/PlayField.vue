@@ -224,6 +224,21 @@ export default class PlayField extends Vue {
     this.drawTetromino()
     return true
   }
+  rotateLeft(): void {
+    const leftRotation: number = (this.rotation + 1) % this.tetromino.blocks.length
+
+    for (const [dy, row] of this.tetromino.blocks[leftRotation].entries()) {
+      for (const [dx, blockElement] of row.entries()) {
+        if (blockElement != 0) {
+          if (this.isBlockFilled[this.currentY + dy][this.currentX + dx]) return
+        }
+      }
+    }
+
+    this.clearTetromino()
+    this.rotation = leftRotation
+    this.drawTetromino()
+  }
 }
 </script>
 
