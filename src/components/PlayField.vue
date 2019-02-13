@@ -219,11 +219,11 @@ export default class PlayField extends Vue {
     this.currentX++
     this.drawTetromino()
   }
-  moveDown(): void {
+  moveDown(): boolean {
     for (const [dy, row] of this.tetromino.blocks[this.rotation].entries()) {
       for (const [dx, blockElement] of row.entries()) {
         if (blockElement != 0) {
-          if (this.isBlockFilled[this.currentY + dy + 1][this.currentX + dx]) return
+          if (this.isBlockFilled[this.currentY + dy + 1][this.currentX + dx]) return false
         }
       }
     }
@@ -231,6 +231,7 @@ export default class PlayField extends Vue {
     this.clearTetromino()
     this.currentY++
     this.drawTetromino()
+    return true
   }
 }
 </script>
