@@ -90,6 +90,13 @@ export default class PlayField extends Vue {
           event.preventDefault()
           this.moveRight()
           break
+
+        case 40:
+        case 68:
+          // Down or D
+          event.preventDefault()
+          this.moveDown()
+          break
       }
     })
   }
