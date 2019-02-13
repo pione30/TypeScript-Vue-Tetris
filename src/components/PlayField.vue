@@ -158,22 +158,13 @@ export default class PlayField extends Vue {
         this.drawTetromino()
 
         setTimeout(() => {
-          // return if the tetromino can not move down any more
-          for (const [dy, row] of this.tetromino.blocks[this.rotation].entries()) {
-            for (const [dx, blockElement] of row.entries()) {
-              if (blockElement != 0) {
-                if (this.isBlockFilled[this.currentY + dy + 1][this.currentX + dx]) {
-                  this.fillBlocksByTetromino()
-                  resolve("grounded")
-                  return
-                }
-              }
-            }
+          const canMoveDown: boolean = this.moveDown()
+          if (!canMoveDown) {
+            this.fillBlocksByTetromino()
+            resolve("grounded")
+            return
           }
 
-          this.clearTetromino()
-
-          this.currentY++
           execCurrentTurn(milliseconds)
             .then(() => {
               resolve("grounded")
