@@ -16,7 +16,6 @@ export default class PlayField extends Vue {
 
   isBlockFilled!: boolean[][]
   colorBoard!: string[][]
-  rotation: number = 0
 
   canvas!: HTMLCanvasElement
   context!: CanvasRenderingContext2D
@@ -26,6 +25,7 @@ export default class PlayField extends Vue {
 
   currentX: number = Math.floor(this.configs.width / 2) - 1
   currentY: number = 1
+  rotation: number = 0
 
   mounted(): void {
     // initialize the board
@@ -164,6 +164,7 @@ export default class PlayField extends Vue {
   onTetrominoChange(): void {
     this.currentX = Math.floor(this.configs.width / 2) - 1
     this.currentY = 1
+    this.rotation = 0
 
     const execCurrentTurn = (milliseconds: number): Promise<string> =>
       new Promise((resolve, reject) => {
