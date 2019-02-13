@@ -138,6 +138,16 @@ export default class PlayField extends Vue {
     }
   }
 
+  fillBlocksByTetromino(): void {
+    for (const [dy, row] of this.tetromino.blocks[this.rotation].entries()) {
+      for (const [dx, blockElement] of row.entries()) {
+        if (blockElement != 0) {
+          this.isBlockFilled[this.currentY + dy][this.currentX + dx] = true
+        }
+      }
+    }
+  }
+
   @Watch("tetromino")
   onTetrominoChange(): void {
     this.currentX = Math.floor(this.configs.width / 2) - 1
