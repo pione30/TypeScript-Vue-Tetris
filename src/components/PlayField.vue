@@ -133,6 +133,9 @@ export default class PlayField extends Vue {
 
   @Watch("tetromino")
   onTetrominoChange(): void {
+    this.currentX = Math.floor(this.configs.width / 2) - 1
+    this.currentY = 1
+
     const execCurrentTurn = (milliseconds: number): Promise<string> =>
       new Promise((resolve, reject) => {
         this.drawTetromino()
@@ -171,8 +174,6 @@ export default class PlayField extends Vue {
         }, milliseconds)
       })
 
-    this.currentX = Math.floor(this.configs.width / 2) - 1
-    this.currentY = 1
     execCurrentTurn(1000)
       .then(() => {
         this.$emit("tetromino-grounded")
