@@ -76,12 +76,20 @@ export default class PlayField extends Vue {
     }
 
     window.addEventListener("keydown", event => {
-      if (event.keyCode === 37) {
-        event.preventDefault()
-        this.moveLeft()
-      } else if (event.keyCode === 39) {
-        event.preventDefault()
-        this.moveRight()
+      switch (event.keyCode) {
+        case 37:
+        case 83:
+          // Left or S
+          event.preventDefault()
+          this.moveLeft()
+          break
+
+        case 39:
+        case 70:
+          // Right or F
+          event.preventDefault()
+          this.moveRight()
+          break
       }
     })
   }
