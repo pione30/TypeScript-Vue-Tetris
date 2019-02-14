@@ -1,6 +1,11 @@
 <template>
   <div>
-    <play-field :configs="configs" :tetromino="tetromino" @tetromino-grounded="popNextTetromino" />
+    <play-field
+      :configs="configs"
+      :tetromino="tetromino"
+      :flip-flop-turn="flipFlopTurn"
+      @tetromino-grounded="popNextTetromino"
+    />
   </div>
 </template>
 
@@ -29,12 +34,19 @@ export default class TetrisComponent extends Vue {
     blocks: [[[]]]
   }
 
+  flipFlopTurn: boolean = true
+
   mounted(): void {
     this.popNextTetromino()
   }
 
   popNextTetromino(): void {
+    // If current tetromino and next tetromino are the same ones,
+    // Vue.js cannot detect the "change" of the tetromino.
+    // So tetromino cannot be used to watch the turn changes and
+    // we need another variable which just only tells "turn-changing" information.
     this.tetromino = Tetrominos[Math.floor(Math.random() * Tetrominos.length)]
+    this.flipFlopTurn = !this.flipFlopTurn
   }
 }
 </script>

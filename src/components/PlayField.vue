@@ -13,6 +13,7 @@ import Tetromino from "../@types/Tetromino"
 export default class PlayField extends Vue {
   @Prop() configs!: BoardConfigs
   @Prop() tetromino!: Tetromino
+  @Prop() flipFlopTurn!: boolean
 
   isBlockFilled!: boolean[][]
   colorBoard!: string[][]
@@ -169,8 +170,9 @@ export default class PlayField extends Vue {
     }
   }
 
-  @Watch("tetromino")
-  onTetrominoChange(): void {
+  @Watch("flipFlopTurn")
+  onFlipFlopTurnChange(): void {
+    // start current turn
     this.currentX = Math.floor(this.configs.width / 2) - 1
     this.currentY = 1
     this.rotation = 0
