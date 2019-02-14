@@ -27,6 +27,8 @@ export default class PlayField extends Vue {
   currentY: number = 1
   rotation: number = 0
 
+  intervalID: number = 0
+
   mounted(): void {
     // initialize the board
     this.isBlockFilled = Array.from(new Array(this.configs.height), () =>
@@ -166,35 +168,9 @@ export default class PlayField extends Vue {
     this.currentY = 1
     this.rotation = 0
 
-    const execCurrentTurn = (milliseconds: number): Promise<string> =>
-      new Promise((resolve, reject) => {
-        this.drawTetromino()
+    this.drawTetromino()
 
-        setTimeout(() => {
-          const canMoveDown: boolean = this.moveDown()
-          if (!canMoveDown) {
-            this.fillBlocksByTetromino()
-            resolve("grounded")
-            return
-          }
-
-          execCurrentTurn(milliseconds)
-            .then(() => {
-              resolve("grounded")
-            })
-            .catch(() => {
-              console.error("Something went wrong")
-            })
-        }, milliseconds)
-      })
-
-    execCurrentTurn(1000)
-      .then(() => {
-        this.$emit("tetromino-grounded")
-      })
-      .catch(() => {
-        console.error("Something went wrong")
-      })
+    this.intervalID = setInterval(() => this.moveDown(), 1000)
   }
 
   moveLeft(): void {
@@ -227,7 +203,12 @@ export default class PlayField extends Vue {
     for (const [dy, row] of this.tetromino.blocks[this.rotation].entries()) {
       for (const [dx, blockElement] of row.entries()) {
         if (blockElement != 0) {
-          if (this.isBlockFilled[this.currentY + dy + 1][this.currentX + dx]) return false
+          if (this.isBlockFilled[this.currentY + dy + 1][this.currentX + dx]) {
+            clearInterval(this.intervalID)
+            this.fillBlocksByTetromino()
+            this.$emit("tetromino-grounded")
+            return false
+          }
         }
       }
     }
