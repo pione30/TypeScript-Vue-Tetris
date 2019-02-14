@@ -86,6 +86,13 @@ export default class PlayField extends Vue {
           this.moveLeft()
           break
 
+        case 38:
+        case 69:
+          // Up or E
+          event.preventDefault()
+          this.hardDrop()
+          break
+
         case 39:
         case 70:
           // Right or F
@@ -217,6 +224,9 @@ export default class PlayField extends Vue {
     this.currentY++
     this.drawTetromino()
     return true
+  }
+  hardDrop(): void {
+    while (this.moveDown());
   }
   rotateLeft(): void {
     const leftRotation: number = (this.rotation + 1) % this.tetromino.blocks.length
