@@ -8,19 +8,19 @@ export const Tetrominos: Tetromino[] = [
 
   {
     name: "O",
-    color: "yellow",
+    color: "gold",
     blocks: [[[1, 1], [1, 1]]]
   },
 
   {
     name: "S",
-    color: "hotpink",
+    color: "magenta",
     blocks: [[[0, 1, 1], [1, 1, 0]], [[1, 0], [1, 1], [0, 1]]]
   },
 
   {
     name: "Z",
-    color: "greenyellow",
+    color: "lawngreen",
     blocks: [[[1, 1, 0], [0, 1, 1]], [[0, 1], [1, 1], [1, 0]]]
   },
 
@@ -37,7 +37,7 @@ export const Tetrominos: Tetromino[] = [
 
   {
     name: "L",
-    color: "orange",
+    color: "darkorange",
     blocks: [
       [[0, 0, 1], [1, 1, 1]],
       [[1, 1], [0, 1], [0, 1]],
