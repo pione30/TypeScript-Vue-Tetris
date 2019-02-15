@@ -59,7 +59,7 @@ export default class PlayField extends Vue {
     this.unitHeight = this.canvas.height / this.configs.height
 
     // draw grid
-    this.context.strokeStyle = "gray"
+    this.context.strokeStyle = "lightgray"
     this.paintBoardAll()
 
     window.addEventListener("keydown", event => {
