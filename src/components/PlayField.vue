@@ -123,6 +123,18 @@ export default class PlayField extends Vue {
     })
   }
 
+  @Watch("flipFlopTurn")
+  onFlipFlopTurnChange(): void {
+    // start current turn
+    this.currentX = Math.floor(this.configs.width / 2) - 1
+    this.currentY = 1
+    this.rotation = 0
+
+    this.drawTetromino()
+
+    this.intervalID = setInterval(() => this.moveDown(), 1000)
+  }
+
   drawTetromino(): void {
     this.context.fillStyle = this.tetromino.color
     for (const [dy, row] of this.tetromino.blocks[this.rotation].entries()) {
@@ -168,18 +180,6 @@ export default class PlayField extends Vue {
         }
       }
     }
-  }
-
-  @Watch("flipFlopTurn")
-  onFlipFlopTurnChange(): void {
-    // start current turn
-    this.currentX = Math.floor(this.configs.width / 2) - 1
-    this.currentY = 1
-    this.rotation = 0
-
-    this.drawTetromino()
-
-    this.intervalID = setInterval(() => this.moveDown(), 1000)
   }
 
   moveLeft(): void {
