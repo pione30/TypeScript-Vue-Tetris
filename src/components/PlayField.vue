@@ -150,6 +150,12 @@ export default class PlayField extends Vue {
             this.unitWidth,
             this.unitHeight
           )
+          this.context.strokeRect(
+            (this.currentX + dx) * this.unitWidth,
+            (this.currentY + dy) * this.unitHeight,
+            this.unitWidth,
+            this.unitHeight
+          )
         }
       }
     }
