@@ -62,49 +62,51 @@ export default class PlayField extends Vue {
     this.context.strokeStyle = "lightgray"
     this.paintBoardAll()
 
-    window.addEventListener("keydown", event => {
-      switch (event.keyCode) {
-        case 37:
-        case 83:
-          // Left or S
-          event.preventDefault()
-          this.moveLeft()
-          break
+    window.addEventListener("keydown", this.tetriminoController)
+  }
 
-        case 38:
-        case 69:
-          // Up or E
-          event.preventDefault()
-          this.hardDrop()
-          break
+  tetriminoController: (event: KeyboardEvent) => void = event => {
+    switch (event.keyCode) {
+      case 37:
+      case 83:
+        // Left or S
+        event.preventDefault()
+        this.moveLeft()
+        break
 
-        case 39:
-        case 70:
-          // Right or F
-          event.preventDefault()
-          this.moveRight()
-          break
+      case 38:
+      case 69:
+        // Up or E
+        event.preventDefault()
+        this.hardDrop()
+        break
 
-        case 40:
-        case 68:
-          // Down or D
-          event.preventDefault()
-          this.moveDown()
-          break
+      case 39:
+      case 70:
+        // Right or F
+        event.preventDefault()
+        this.moveRight()
+        break
 
-        case 74:
-          // J
-          event.preventDefault()
-          this.rotateLeft()
-          break
+      case 40:
+      case 68:
+        // Down or D
+        event.preventDefault()
+        this.moveDown()
+        break
 
-        case 75:
-          // K
-          event.preventDefault()
-          this.rotateRight()
-          break
-      }
-    })
+      case 74:
+        // J
+        event.preventDefault()
+        this.rotateLeft()
+        break
+
+      case 75:
+        // K
+        event.preventDefault()
+        this.rotateRight()
+        break
+    }
   }
 
   paintBoardAll(): void {
@@ -135,6 +137,12 @@ export default class PlayField extends Vue {
     this.rotation = 0
 
     this.drawTetromino()
+
+    if (this.isGameOver()) {
+      window.removeEventListener("keydown", this.tetriminoController)
+      this.$emit("game-over")
+      return
+    }
 
     this.intervalID = setInterval(() => this.moveDown(), 1000)
   }
@@ -304,6 +312,17 @@ export default class PlayField extends Vue {
 
       this.paintBoardAll()
     }
+  }
+
+  isGameOver(): boolean {
+    for (const [dy, row] of this.tetromino.blocks[this.rotation].entries()) {
+      for (const [dx, blockElement] of row.entries()) {
+        if (blockElement != 0) {
+          if (this.isBlockFilled[this.currentY + dy][this.currentX + dx]) return true
+        }
+      }
+    }
+    return false
   }
 }
 </script>
