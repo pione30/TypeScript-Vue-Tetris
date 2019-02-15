@@ -60,23 +60,7 @@ export default class PlayField extends Vue {
 
     // draw grid
     this.context.strokeStyle = "gray"
-    for (let y = 0; y < this.configs.height; y++) {
-      for (let x = 0; x < this.configs.width; x++) {
-        this.context.fillStyle = this.colorBoard[y][x]
-        this.context.fillRect(
-          x * this.unitWidth,
-          y * this.unitHeight,
-          this.unitWidth,
-          this.unitHeight
-        )
-        this.context.strokeRect(
-          x * this.unitWidth,
-          y * this.unitHeight,
-          this.unitWidth,
-          this.unitHeight
-        )
-      }
-    }
+    this.paintBoardAll()
 
     window.addEventListener("keydown", event => {
       switch (event.keyCode) {
@@ -121,6 +105,26 @@ export default class PlayField extends Vue {
           break
       }
     })
+  }
+
+  paintBoardAll(): void {
+    for (const [y, row] of this.colorBoard.entries()) {
+      for (const [x, color] of row.entries()) {
+        this.context.fillStyle = color
+        this.context.fillRect(
+          x * this.unitWidth,
+          y * this.unitHeight,
+          this.unitWidth,
+          this.unitHeight
+        )
+        this.context.strokeRect(
+          x * this.unitWidth,
+          y * this.unitHeight,
+          this.unitWidth,
+          this.unitHeight
+        )
+      }
+    }
   }
 
   @Watch("flipFlopTurn")
