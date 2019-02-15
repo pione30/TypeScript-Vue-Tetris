@@ -220,6 +220,7 @@ export default class PlayField extends Vue {
           if (this.isBlockFilled[this.currentY + dy + 1][this.currentX + dx]) {
             clearInterval(this.intervalID)
             this.fillBlocksAndColorByTetromino()
+            this.deleteCompletedLines()
             this.$emit("tetromino-grounded")
             return false
           }
@@ -265,6 +266,38 @@ export default class PlayField extends Vue {
     this.clearTetromino()
     this.rotation = rightRotation
     this.drawTetromino()
+  }
+
+  deleteCompletedLines(): void {
+    let filledLineIndices: number[] = []
+    for (const [y, row] of this.isBlockFilled.entries()) {
+      if (y === 0 || y === this.configs.height - 1) continue
+
+      if (row.every(blockIsFilled => blockIsFilled)) {
+        filledLineIndices.push(y)
+      }
+    }
+
+    if (filledLineIndices.length > 0) {
+      for (const index of filledLineIndices) {
+        // remove the filled line
+        this.isBlockFilled.splice(index, 1)
+        this.colorBoard.splice(index, 1)
+
+        // insert new line
+        const unitFilledLine: boolean[] = new Array(this.configs.width).fill(false)
+        unitFilledLine[0] = true
+        unitFilledLine[this.configs.width - 1] = true
+        this.isBlockFilled.splice(1, 0, unitFilledLine)
+
+        const unitColorLine: string[] = new Array(this.configs.width).fill("white")
+        unitColorLine[0] = "black"
+        unitColorLine[this.configs.width - 1] = "black"
+        this.colorBoard.splice(1, 0, unitColorLine)
+      }
+
+      this.paintBoardAll()
+    }
   }
 }
 </script>
