@@ -176,11 +176,12 @@ export default class PlayField extends Vue {
     }
   }
 
-  fillBlocksByTetromino(): void {
+  fillBlocksAndColorByTetromino(): void {
     for (const [dy, row] of this.tetromino.blocks[this.rotation].entries()) {
       for (const [dx, blockElement] of row.entries()) {
         if (blockElement != 0) {
           this.isBlockFilled[this.currentY + dy][this.currentX + dx] = true
+          this.colorBoard[this.currentY + dy][this.currentX + dx] = this.tetromino.color
         }
       }
     }
@@ -218,7 +219,7 @@ export default class PlayField extends Vue {
         if (blockElement != 0) {
           if (this.isBlockFilled[this.currentY + dy + 1][this.currentX + dx]) {
             clearInterval(this.intervalID)
-            this.fillBlocksByTetromino()
+            this.fillBlocksAndColorByTetromino()
             this.$emit("tetromino-grounded")
             return false
           }
