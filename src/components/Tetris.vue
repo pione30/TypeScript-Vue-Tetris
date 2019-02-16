@@ -36,17 +36,37 @@ export default class TetrisComponent extends Vue {
 
   flipFlopTurn: boolean = true
 
+  nextTetrominoIndicesSet: number[] = Array.from(Array(Tetrominos.length).keys())
+  tetrominoIndicesIterator: IterableIterator<number> = this.nextTetrominoIndicesSet.values()
+
   mounted(): void {
+    this.nextTetrominoIndicesSet = this.shuffle(this.nextTetrominoIndicesSet)
     this.popNextTetromino()
   }
 
   popNextTetromino(): void {
+    let result: IteratorResult<number> = this.tetrominoIndicesIterator.next()
+    if (result.done) {
+      this.nextTetrominoIndicesSet = this.shuffle(this.nextTetrominoIndicesSet)
+      this.tetrominoIndicesIterator = this.nextTetrominoIndicesSet.values()
+      result = this.tetrominoIndicesIterator.next()
+    }
+    this.tetromino = Tetrominos[result.value]
+
     // If current tetromino and next tetromino are the same ones,
     // Vue.js cannot detect the "change" of the tetromino.
     // So tetromino cannot be used to watch the turn changes and
     // we need another variable which just only tells "turn-changing" information.
-    this.tetromino = Tetrominos[Math.floor(Math.random() * Tetrominos.length)]
     this.flipFlopTurn = !this.flipFlopTurn
+  }
+
+  // Fisher–Yates shuffle algorithm
+  shuffle(array: number[]): number[] {
+    for (let i: number = array.length - 1; i > 0; i--) {
+      const j: number = Math.floor(Math.random() * (i + 1))
+      ;[array[i], array[j]] = [array[j], array[i]]
+    }
+    return array
   }
 }
 </script>
