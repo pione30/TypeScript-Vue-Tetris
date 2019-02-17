@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="canvas-container">
     <canvas id="canvas" />
   </div>
 </template>
@@ -18,7 +18,6 @@ export default class PlayField extends Vue {
   isBlockFilled!: boolean[][]
   colorBoard!: string[][]
 
-  canvas!: HTMLCanvasElement
   context!: CanvasRenderingContext2D
 
   unitWidth!: number
@@ -53,10 +52,15 @@ export default class PlayField extends Vue {
       this.colorBoard[y][this.configs.width - 1] = "black"
     }
 
-    this.canvas = document.getElementById("canvas") as HTMLCanvasElement
-    this.context = this.canvas.getContext("2d") as CanvasRenderingContext2D
-    this.unitWidth = this.canvas.width / this.configs.width
-    this.unitHeight = this.canvas.height / this.configs.height
+    const canvasContainer: HTMLElement = document.getElementById("canvas-container") as HTMLElement
+    const canvas: HTMLCanvasElement = document.getElementById("canvas") as HTMLCanvasElement
+    this.context = canvas.getContext("2d") as CanvasRenderingContext2D
+
+    // set parent container size as canvas size
+    canvas.width = canvasContainer.clientWidth
+    canvas.height = canvasContainer.clientHeight
+    this.unitWidth = canvas.width / this.configs.width
+    this.unitHeight = canvas.height / this.configs.height
 
     // draw grid
     this.context.strokeStyle = "lightgray"
@@ -328,9 +332,19 @@ export default class PlayField extends Vue {
 </script>
 
 <style>
-canvas {
+#canvas-container {
   position: relative;
-  width: 100;
-  height: 50;
+  margin: 10px auto;
+  height: 0;
+  width: 27%;
+  overflow: hidden;
+  padding-top: 49.5%; /* 22 / 12 * 0.27 */
+}
+#canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
 }
 </style>
