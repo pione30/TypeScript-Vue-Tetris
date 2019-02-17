@@ -1,27 +1,35 @@
 <template>
-  <div>
+  <div id="canvas-container">
     <canvas id="canvas" />
   </div>
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop } from "vue-property-decorator"
+import { Vue, Component, Prop, Watch } from "vue-property-decorator"
+import BoardConfigs from "../@types/BoardConfigs"
+import Tetromino from "../@types/Tetromino"
 
 @Component
 export default class PlayField extends Vue {
-  @Prop() configs!: any
+  @Prop() configs!: BoardConfigs
+  @Prop() tetromino!: Tetromino
+  @Prop() flipFlopTurn!: boolean
 
   isBlockFilled!: boolean[][]
   colorBoard!: string[][]
 
-  mounted(): void {
-    const canvas: HTMLCanvasElement = document.getElementById(
-      "canvas"
-    ) as HTMLCanvasElement
-    const context: CanvasRenderingContext2D = canvas.getContext(
-      "2d"
-    ) as CanvasRenderingContext2D
+  context!: CanvasRenderingContext2D
 
+  unitWidth!: number
+  unitHeight!: number
+
+  currentX: number = Math.floor(this.configs.width / 2) - 1
+  currentY: number = 1
+  rotation: number = 0
+
+  intervalID: number = 0
+
+  mounted(): void {
     // initialize the board
     this.isBlockFilled = Array.from(new Array(this.configs.height), () =>
       new Array(this.configs.width).fill(false)
@@ -44,56 +52,299 @@ export default class PlayField extends Vue {
       this.colorBoard[y][this.configs.width - 1] = "black"
     }
 
-    const unitWidth: number = canvas.width / this.configs.width
-    const unitHeight: number = canvas.height / this.configs.height
+    const canvasContainer: HTMLElement = document.getElementById("canvas-container") as HTMLElement
+    const canvas: HTMLCanvasElement = document.getElementById("canvas") as HTMLCanvasElement
+    this.context = canvas.getContext("2d") as CanvasRenderingContext2D
+
+    // set parent container size as canvas size
+    canvas.width = canvasContainer.clientWidth
+    canvas.height = canvasContainer.clientHeight
+    this.unitWidth = canvas.width / this.configs.width
+    this.unitHeight = canvas.height / this.configs.height
 
     // draw grid
-    context.strokeStyle = "gray"
-    for (let y = 0; y < this.configs.height; y++) {
-      for (let x = 0; x < this.configs.width; x++) {
-        context.fillStyle = this.colorBoard[y][x]
-        context.fillRect(x * unitWidth, y * unitHeight, unitWidth, unitHeight)
-        context.strokeRect(x * unitWidth, y * unitHeight, unitWidth, unitHeight)
+    this.context.strokeStyle = "lightgray"
+    this.paintBoardAll()
+
+    window.addEventListener("keydown", this.tetriminoController)
+  }
+
+  tetriminoController: (event: KeyboardEvent) => void = event => {
+    switch (event.keyCode) {
+      case 37:
+      case 83:
+        // Left or S
+        event.preventDefault()
+        this.moveLeft()
+        break
+
+      case 38:
+      case 69:
+        // Up or E
+        event.preventDefault()
+        this.hardDrop()
+        break
+
+      case 39:
+      case 70:
+        // Right or F
+        event.preventDefault()
+        this.moveRight()
+        break
+
+      case 40:
+      case 68:
+        // Down or D
+        event.preventDefault()
+        this.moveDown()
+        break
+
+      case 74:
+        // J
+        event.preventDefault()
+        this.rotateLeft()
+        break
+
+      case 75:
+        // K
+        event.preventDefault()
+        this.rotateRight()
+        break
+    }
+  }
+
+  paintBoardAll(): void {
+    for (const [y, row] of this.colorBoard.entries()) {
+      for (const [x, color] of row.entries()) {
+        this.context.fillStyle = color
+        this.context.fillRect(
+          x * this.unitWidth,
+          y * this.unitHeight,
+          this.unitWidth,
+          this.unitHeight
+        )
+        this.context.strokeRect(
+          x * this.unitWidth,
+          y * this.unitHeight,
+          this.unitWidth,
+          this.unitHeight
+        )
+      }
+    }
+  }
+
+  @Watch("flipFlopTurn")
+  onFlipFlopTurnChange(): void {
+    // start current turn
+    this.currentX = Math.floor(this.configs.width / 2) - 1
+    this.currentY = 1
+    this.rotation = 0
+
+    this.drawTetromino()
+
+    if (this.isGameOver()) {
+      window.removeEventListener("keydown", this.tetriminoController)
+      this.$emit("game-over")
+      return
+    }
+
+    this.intervalID = setInterval(() => this.moveDown(), 1000)
+  }
+
+  drawTetromino(): void {
+    this.context.fillStyle = this.tetromino.color
+    for (const [dy, row] of this.tetromino.blocks[this.rotation].entries()) {
+      for (const [dx, blockElement] of row.entries()) {
+        if (blockElement != 0) {
+          this.context.fillRect(
+            (this.currentX + dx) * this.unitWidth,
+            (this.currentY + dy) * this.unitHeight,
+            this.unitWidth,
+            this.unitHeight
+          )
+          this.context.strokeRect(
+            (this.currentX + dx) * this.unitWidth,
+            (this.currentY + dy) * this.unitHeight,
+            this.unitWidth,
+            this.unitHeight
+          )
+        }
+      }
+    }
+  }
+
+  clearTetromino(): void {
+    for (const [dy, row] of this.tetromino.blocks[this.rotation].entries()) {
+      for (const [dx, blockElement] of row.entries()) {
+        if (blockElement != 0) {
+          this.context.clearRect(
+            (this.currentX + dx) * this.unitWidth,
+            (this.currentY + dy) * this.unitHeight,
+            this.unitWidth,
+            this.unitHeight
+          )
+          this.context.strokeRect(
+            (this.currentX + dx) * this.unitWidth,
+            (this.currentY + dy) * this.unitHeight,
+            this.unitWidth,
+            this.unitHeight
+          )
+        }
+      }
+    }
+  }
+
+  fillBlocksAndColorByTetromino(): void {
+    for (const [dy, row] of this.tetromino.blocks[this.rotation].entries()) {
+      for (const [dx, blockElement] of row.entries()) {
+        if (blockElement != 0) {
+          this.isBlockFilled[this.currentY + dy][this.currentX + dx] = true
+          this.colorBoard[this.currentY + dy][this.currentX + dx] = this.tetromino.color
+        }
+      }
+    }
+  }
+
+  moveLeft(): void {
+    for (const [dy, row] of this.tetromino.blocks[this.rotation].entries()) {
+      for (const [dx, blockElement] of row.entries()) {
+        if (blockElement != 0) {
+          if (this.isBlockFilled[this.currentY + dy][this.currentX + dx - 1]) return
+        }
       }
     }
 
-    const execCurrentTurn = (currentY: number, milliseconds: number): void => {
-      const currentX: number = Math.floor(this.configs.width / 2)
-      context.fillStyle = "green"
-      context.fillRect(
-        currentX * unitWidth,
-        currentY * unitHeight,
-        unitWidth,
-        unitHeight
-      )
-
-      setTimeout(() => {
-        if (!this.isBlockFilled[currentY + 1][currentX]) {
-          context.clearRect(
-            currentX * unitWidth,
-            currentY * unitHeight,
-            unitWidth,
-            unitHeight
-          )
-          context.strokeRect(
-            currentX * unitWidth,
-            currentY * unitHeight,
-            unitWidth,
-            unitHeight
-          )
-          execCurrentTurn(currentY + 1, milliseconds)
+    this.clearTetromino()
+    this.currentX--
+    this.drawTetromino()
+  }
+  moveRight(): void {
+    for (const [dy, row] of this.tetromino.blocks[this.rotation].entries()) {
+      for (const [dx, blockElement] of row.entries()) {
+        if (blockElement != 0) {
+          if (this.isBlockFilled[this.currentY + dy][this.currentX + dx + 1]) return
         }
-      }, milliseconds)
+      }
     }
-    execCurrentTurn(1, 1000)
+
+    this.clearTetromino()
+    this.currentX++
+    this.drawTetromino()
+  }
+  moveDown(): boolean {
+    for (const [dy, row] of this.tetromino.blocks[this.rotation].entries()) {
+      for (const [dx, blockElement] of row.entries()) {
+        if (blockElement != 0) {
+          if (this.isBlockFilled[this.currentY + dy + 1][this.currentX + dx]) {
+            clearInterval(this.intervalID)
+            this.fillBlocksAndColorByTetromino()
+            this.deleteCompletedLines()
+            this.$emit("tetromino-grounded")
+            return false
+          }
+        }
+      }
+    }
+
+    this.clearTetromino()
+    this.currentY++
+    this.drawTetromino()
+    return true
+  }
+  hardDrop(): void {
+    while (this.moveDown());
+  }
+  rotateLeft(): void {
+    const leftRotation: number = (this.rotation + 1) % this.tetromino.blocks.length
+
+    for (const [dy, row] of this.tetromino.blocks[leftRotation].entries()) {
+      for (const [dx, blockElement] of row.entries()) {
+        if (blockElement != 0) {
+          if (this.isBlockFilled[this.currentY + dy][this.currentX + dx]) return
+        }
+      }
+    }
+
+    this.clearTetromino()
+    this.rotation = leftRotation
+    this.drawTetromino()
+  }
+  rotateRight(): void {
+    const rightRotation: number =
+      (this.rotation + this.tetromino.blocks.length - 1) % this.tetromino.blocks.length
+
+    for (const [dy, row] of this.tetromino.blocks[rightRotation].entries()) {
+      for (const [dx, blockElement] of row.entries()) {
+        if (blockElement != 0) {
+          if (this.isBlockFilled[this.currentY + dy][this.currentX + dx]) return
+        }
+      }
+    }
+
+    this.clearTetromino()
+    this.rotation = rightRotation
+    this.drawTetromino()
+  }
+
+  deleteCompletedLines(): void {
+    let filledLineIndices: number[] = []
+    for (const [y, row] of this.isBlockFilled.entries()) {
+      if (y === 0 || y === this.configs.height - 1) continue
+
+      if (row.every(blockIsFilled => blockIsFilled)) {
+        filledLineIndices.push(y)
+      }
+    }
+
+    if (filledLineIndices.length > 0) {
+      for (const index of filledLineIndices) {
+        // remove the filled line
+        this.isBlockFilled.splice(index, 1)
+        this.colorBoard.splice(index, 1)
+
+        // insert new line
+        const unitFilledLine: boolean[] = new Array(this.configs.width).fill(false)
+        unitFilledLine[0] = true
+        unitFilledLine[this.configs.width - 1] = true
+        this.isBlockFilled.splice(1, 0, unitFilledLine)
+
+        const unitColorLine: string[] = new Array(this.configs.width).fill("white")
+        unitColorLine[0] = "black"
+        unitColorLine[this.configs.width - 1] = "black"
+        this.colorBoard.splice(1, 0, unitColorLine)
+      }
+
+      this.paintBoardAll()
+    }
+  }
+
+  isGameOver(): boolean {
+    for (const [dy, row] of this.tetromino.blocks[this.rotation].entries()) {
+      for (const [dx, blockElement] of row.entries()) {
+        if (blockElement != 0) {
+          if (this.isBlockFilled[this.currentY + dy][this.currentX + dx]) return true
+        }
+      }
+    }
+    return false
   }
 }
 </script>
 
 <style>
-canvas {
+#canvas-container {
   position: relative;
-  width: 100;
-  height: 50;
+  margin: 10px auto;
+  height: 0;
+  width: 27%;
+  overflow: hidden;
+  padding-top: 49.5%; /* 22 / 12 * 0.27 */
+}
+#canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
 }
 </style>
