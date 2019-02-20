@@ -84,11 +84,11 @@ export default class NextPreview extends Vue {
 <style>
 #next-preview-canvas-container {
   position: relative;
-  margin: 10px auto;
+  margin: 10px auto 10px 20px;
   height: 0;
-  width: 27%;
+  width: 10%;
   overflow: hidden;
-  padding-top: 64.8%; /* 12 / 5 * 0.27 */
+  padding-top: 24%; /* 12 / 5 * 0.1 */
 }
 #next-preview-canvas {
   position: absolute;
