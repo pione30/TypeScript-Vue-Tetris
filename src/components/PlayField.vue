@@ -1,6 +1,6 @@
 <template>
-  <div id="canvas-container">
-    <canvas id="canvas" />
+  <div id="play-field-canvas-container">
+    <canvas id="play-field-canvas" />
   </div>
 </template>
 
@@ -52,8 +52,12 @@ export default class PlayField extends Vue {
       this.colorBoard[y][this.configs.width - 1] = "black"
     }
 
-    const canvasContainer: HTMLElement = document.getElementById("canvas-container") as HTMLElement
-    const canvas: HTMLCanvasElement = document.getElementById("canvas") as HTMLCanvasElement
+    const canvasContainer: HTMLElement = document.getElementById(
+      "play-field-canvas-container"
+    ) as HTMLElement
+    const canvas: HTMLCanvasElement = document.getElementById(
+      "play-field-canvas"
+    ) as HTMLCanvasElement
     this.context = canvas.getContext("2d") as CanvasRenderingContext2D
 
     // set parent container size as canvas size
@@ -332,7 +336,7 @@ export default class PlayField extends Vue {
 </script>
 
 <style>
-#canvas-container {
+#play-field-canvas-container {
   position: relative;
   margin: 10px auto;
   height: 0;
@@ -340,7 +344,7 @@ export default class PlayField extends Vue {
   overflow: hidden;
   padding-top: 49.5%; /* 22 / 12 * 0.27 */
 }
-#canvas {
+#play-field-canvas {
   position: absolute;
   top: 0;
   left: 0;
