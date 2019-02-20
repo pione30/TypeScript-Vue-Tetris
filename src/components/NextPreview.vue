@@ -25,6 +25,7 @@ export default class NextPreview extends Vue {
   unitWidth!: number
   unitHeight!: number
   canvasBlockWidth: number = 5
+  canvasBlockHeightPerTetromino: number = 4
 
   mounted(): void {
     const canvasContainer: HTMLElement = document.getElementById(
@@ -36,7 +37,7 @@ export default class NextPreview extends Vue {
     this.canvas.width = canvasContainer.clientWidth
     this.canvas.height = canvasContainer.clientHeight
     this.unitWidth = this.canvas.width / this.canvasBlockWidth
-    this.unitHeight = this.canvas.height / (4 * this.previewNum)
+    this.unitHeight = this.canvas.height / (this.canvasBlockHeightPerTetromino * this.previewNum)
 
     this.context.strokeStyle = "lightgray"
     this.context.strokeRect(0, 0, this.canvas.width, this.canvas.height)
@@ -51,7 +52,7 @@ export default class NextPreview extends Vue {
       const tetromino: Tetromino = Tetrominos[this.previewIndiceSet[i]]
       const rotation = 0
       const adjustX: number = (this.canvasBlockWidth - tetromino.blocks[rotation][0].length) / 2
-      const adjustY: number = i * 4 + 1
+      const adjustY: number = i * this.canvasBlockHeightPerTetromino + 1
 
       for (const [dy, row] of tetromino.blocks[rotation].entries()) {
         for (const [dx, blockElement] of row.entries()) {
