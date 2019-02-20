@@ -92,6 +92,6 @@ export default class TetrisComponent extends Vue {
 }
 .inline-block {
   display: inline-block;
-  vertical-align: middle;
+  vertical-align: top;
 }
 </style>
