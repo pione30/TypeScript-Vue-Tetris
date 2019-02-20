@@ -1,10 +1,18 @@
 <template>
-  <div>
+  <div id="tetris-component">
     <play-field
+      class="inline-block"
       :configs="configs"
       :tetromino="tetromino"
       :flip-flop-turn="flipFlopTurn"
       @tetromino-grounded="popNextTetromino"
+    />
+    <next-preview
+      class="inline-block"
+      :next-tetromino-indices-set="nextTetrominoIndicesSet"
+      :next-next-tetromino-indices-set="nextNextTetrominoIndicesSet"
+      :flip-flop-turn="flipFlopTurn"
+      :flip-flop-next-tetromino-indices-set="flipFlopNextTetrominoIndicesSet"
     />
   </div>
 </template>
@@ -12,13 +20,15 @@
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator"
 import PlayField from "./PlayField.vue"
+import NextPreview from "./NextPreview.vue"
 import BoardConfigs from "../@types/BoardConfigs"
 import Tetromino from "../@types/Tetromino"
 import { Tetrominos } from "../Tetrominos"
 
 @Component({
   components: {
-    PlayField
+    PlayField,
+    NextPreview
   }
 })
 export default class TetrisComponent extends Vue {
@@ -35,21 +45,26 @@ export default class TetrisComponent extends Vue {
   }
 
   flipFlopTurn: boolean = true
+  flipFlopNextTetrominoIndicesSet: boolean = true
 
-  nextTetrominoIndicesSet: number[] = Array.from(Array(Tetrominos.length).keys())
+  nextTetrominoIndicesSet: number[] = this.shuffle(Array.from(Array(Tetrominos.length).keys()))
+  nextNextTetrominoIndicesSet: number[] = this.shuffle(Array.from(Array(Tetrominos.length).keys()))
   tetrominoIndicesIterator: IterableIterator<number> = this.nextTetrominoIndicesSet.values()
 
   mounted(): void {
-    this.nextTetrominoIndicesSet = this.shuffle(this.nextTetrominoIndicesSet)
     this.popNextTetromino()
   }
 
   popNextTetromino(): void {
     let result: IteratorResult<number> = this.tetrominoIndicesIterator.next()
     if (result.done) {
-      this.nextTetrominoIndicesSet = this.shuffle(this.nextTetrominoIndicesSet)
+      // shallow copy
+      this.nextTetrominoIndicesSet = this.nextNextTetrominoIndicesSet.slice()
       this.tetrominoIndicesIterator = this.nextTetrominoIndicesSet.values()
       result = this.tetrominoIndicesIterator.next()
+
+      this.nextNextTetrominoIndicesSet = this.shuffle(this.nextNextTetrominoIndicesSet)
+      this.flipFlopNextTetrominoIndicesSet = !this.flipFlopNextTetrominoIndicesSet
     }
     this.tetromino = Tetrominos[result.value]
 
@@ -71,4 +86,12 @@ export default class TetrisComponent extends Vue {
 }
 </script>
 
-<style></style>
+<style>
+#tetris-component {
+  text-align: center;
+}
+.inline-block {
+  display: inline-block;
+  vertical-align: top;
+}
+</style>
