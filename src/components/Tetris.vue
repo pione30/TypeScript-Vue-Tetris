@@ -1,12 +1,14 @@
 <template>
-  <div>
+  <div id="tetris-component">
     <play-field
+      class="inline-block"
       :configs="configs"
       :tetromino="tetromino"
       :flip-flop-turn="flipFlopTurn"
       @tetromino-grounded="popNextTetromino"
     />
     <next-preview
+      class="inline-block"
       :next-tetromino-indices-set="nextTetrominoIndicesSet"
       :next-next-tetromino-indices-set="nextNextTetrominoIndicesSet"
       :flip-flop-turn="flipFlopTurn"
@@ -84,4 +86,11 @@ export default class TetrisComponent extends Vue {
 }
 </script>
 
-<style></style>
+<style>
+#tetris-component {
+  text-align: center;
+}
+.inline-block {
+  display: inline-block;
+}
+</style>

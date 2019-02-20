@@ -1,9 +1,7 @@
 <template>
-  <div>
+  <div id="next-preview-canvas-container">
     <p>NEXT</p>
-    <div id="next-preview-canvas-container">
-      <canvas id="next-preview-canvas" />
-    </div>
+    <canvas id="next-preview-canvas" />
   </div>
 </template>
 
