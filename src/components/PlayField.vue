@@ -14,6 +14,7 @@ export default class PlayField extends Vue {
   @Prop() configs!: BoardConfigs
   @Prop() tetrominoIndex!: number
   @Prop() flipFlopTurn!: boolean
+  @Prop() isHoldTetrominoUsedNow!: boolean
 
   isBlockFilled!: boolean[][]
   colorBoard!: string[][]
@@ -71,6 +72,7 @@ export default class PlayField extends Vue {
     this.paintBoardAll()
 
     window.addEventListener("keydown", this.tetriminoController)
+    window.addEventListener("keydown", this.holdController)
   }
 
   tetriminoController: (event: KeyboardEvent) => void = event => {
@@ -117,6 +119,47 @@ export default class PlayField extends Vue {
     }
   }
 
+  holdController: (event: KeyboardEvent) => void = event => {
+    switch (event.keyCode) {
+      case 82:
+      case 85:
+        // R or U
+        event.preventDefault()
+        if (!this.isHoldTetrominoUsedNow) {
+          this.clearTetromino()
+          this.$emit("hold-requested")
+        }
+        break
+    }
+  }
+
+  @Watch("flipFlopTurn")
+  onFlipFlopTurnChange(): void {
+    clearInterval(this.intervalID)
+
+    // start current turn
+    this.currentX = Math.floor(this.configs.width / 2) - 1
+    this.currentY = 1
+    this.rotation = 0
+
+    this.drawTetromino()
+
+    if (this.isGameOver()) {
+      window.removeEventListener("keydown", this.tetriminoController)
+      this.$emit("game-over")
+      return
+    }
+
+    this.intervalID = setInterval(() => this.moveDown(), 1000)
+  }
+
+  @Watch("isHoldTetrominoUsedNow")
+  onIsHoldTetrominoUsedNowChange(isUsedNow: boolean): void {
+    if (isUsedNow) {
+      this.onFlipFlopTurnChange()
+    }
+  }
+
   paintBoardAll(): void {
     for (const [y, row] of this.colorBoard.entries()) {
       for (const [x, color] of row.entries()) {
@@ -135,24 +178,6 @@ export default class PlayField extends Vue {
         )
       }
     }
-  }
-
-  @Watch("flipFlopTurn")
-  onFlipFlopTurnChange(): void {
-    // start current turn
-    this.currentX = Math.floor(this.configs.width / 2) - 1
-    this.currentY = 1
-    this.rotation = 0
-
-    this.drawTetromino()
-
-    if (this.isGameOver()) {
-      window.removeEventListener("keydown", this.tetriminoController)
-      this.$emit("game-over")
-      return
-    }
-
-    this.intervalID = setInterval(() => this.moveDown(), 1000)
   }
 
   drawTetromino(): void {
