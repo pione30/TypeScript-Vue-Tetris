@@ -45,6 +45,7 @@ export default class TetrisComponent extends Vue {
   tetrominoIndicesIterator: IterableIterator<number> = this.nextTetrominoIndicesSet.values()
 
   tetrominoIndex: number = this.nextTetrominoIndicesSet[0]
+  holdTetrominoIndex: number | undefined = undefined
 
   mounted(): void {
     this.popNextTetromino()
