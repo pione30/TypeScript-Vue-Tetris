@@ -1,5 +1,6 @@
 <template>
   <div id="tetris-component">
+    <hold :hold-tetromino-index="holdTetrominoIndex" />
     <play-field
       class="inline-block"
       :configs="configs"
@@ -19,6 +20,7 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator"
+import Hold from "./Hold.vue"
 import PlayField from "./PlayField.vue"
 import NextPreview from "./NextPreview.vue"
 import BoardConfigs from "../@types/BoardConfigs"
@@ -26,6 +28,7 @@ import { Tetrominos } from "../Tetrominos"
 
 @Component({
   components: {
+    Hold,
     PlayField,
     NextPreview
   }
