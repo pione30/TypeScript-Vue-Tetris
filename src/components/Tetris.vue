@@ -6,7 +6,9 @@
       :configs="configs"
       :tetromino-index="tetrominoIndex"
       :flip-flop-turn="flipFlopTurn"
+      :is-hold-tetromino-used-now="isHoldTetrominoUsedNow"
       @tetromino-grounded="popNextTetromino"
+      @hold-requested="handleHoldRequested"
     />
     <next-preview
       class="inline-block"
@@ -42,6 +44,7 @@ export default class TetrisComponent extends Vue {
 
   flipFlopTurn: boolean = true
   flipFlopNextTetrominoIndicesSet: boolean = true
+  isHoldTetrominoUsedNow: boolean = false
 
   nextTetrominoIndicesSet: number[] = this.shuffle(Array.from(Array(Tetrominos.length).keys()))
   nextNextTetrominoIndicesSet: number[] = this.shuffle(Array.from(Array(Tetrominos.length).keys()))
@@ -54,7 +57,26 @@ export default class TetrisComponent extends Vue {
     this.popNextTetromino()
   }
 
+  handleHoldRequested(): void {
+    if (this.isHoldTetrominoUsedNow) return
+
+    if (this.holdTetrominoIndex === undefined) {
+      this.holdTetrominoIndex = this.tetrominoIndex
+      this.popNextTetromino()
+      return
+    }
+
+    // swap
+    const tmp: number = this.holdTetrominoIndex
+    this.holdTetrominoIndex = this.tetrominoIndex
+    this.tetrominoIndex = tmp
+
+    this.isHoldTetrominoUsedNow = true
+  }
+
   popNextTetromino(): void {
+    this.isHoldTetrominoUsedNow = false
+
     let result: IteratorResult<number> = this.tetrominoIndicesIterator.next()
     if (result.done) {
       // shallow copy
