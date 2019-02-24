@@ -146,6 +146,7 @@ export default class PlayField extends Vue {
 
     if (this.isGameOver()) {
       window.removeEventListener("keydown", this.tetriminoController)
+      window.removeEventListener("keydown", this.holdController)
       this.$emit("game-over")
       return
     }
