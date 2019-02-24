@@ -1,6 +1,7 @@
 <template>
   <div id="tetris-component">
     <hold
+      class="inline-block"
       :hold-tetromino-index="holdTetrominoIndex"
       :flip-flop-hold-tetromino="flipFlopHoldTetromino"
     />
