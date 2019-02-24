@@ -55,7 +55,7 @@ export default class TetrisComponent extends Vue {
   tetrominoIndicesIterator: IterableIterator<number> = this.nextTetrominoIndicesSet.values()
 
   tetrominoIndex: number = this.nextTetrominoIndicesSet[0]
-  holdTetrominoIndex: number | undefined = undefined
+  holdTetrominoIndex: number = -1
 
   mounted(): void {
     this.popNextTetromino()
@@ -64,7 +64,7 @@ export default class TetrisComponent extends Vue {
   handleHoldRequested(): void {
     if (this.isHoldTetrominoUsedNow) return
 
-    if (this.holdTetrominoIndex === undefined) {
+    if (this.holdTetrominoIndex === -1) {
       this.holdTetrominoIndex = this.tetrominoIndex
       this.flipFlopHoldTetromino = !this.flipFlopHoldTetromino
       this.popNextTetromino()
