@@ -3,7 +3,7 @@
     <play-field
       class="inline-block"
       :configs="configs"
-      :tetromino="tetromino"
+      :tetromino-index="tetrominoIndex"
       :flip-flop-turn="flipFlopTurn"
       @tetromino-grounded="popNextTetromino"
     />
@@ -22,7 +22,6 @@ import { Vue, Component } from "vue-property-decorator"
 import PlayField from "./PlayField.vue"
 import NextPreview from "./NextPreview.vue"
 import BoardConfigs from "../@types/BoardConfigs"
-import Tetromino from "../@types/Tetromino"
 import { Tetrominos } from "../Tetrominos"
 
 @Component({
@@ -38,18 +37,14 @@ export default class TetrisComponent extends Vue {
     height: 20 + 2
   }
 
-  tetromino: Tetromino = {
-    name: "",
-    color: "",
-    blocks: [[[]]]
-  }
-
   flipFlopTurn: boolean = true
   flipFlopNextTetrominoIndicesSet: boolean = true
 
   nextTetrominoIndicesSet: number[] = this.shuffle(Array.from(Array(Tetrominos.length).keys()))
   nextNextTetrominoIndicesSet: number[] = this.shuffle(Array.from(Array(Tetrominos.length).keys()))
   tetrominoIndicesIterator: IterableIterator<number> = this.nextTetrominoIndicesSet.values()
+
+  tetrominoIndex: number = this.nextTetrominoIndicesSet[0]
 
   mounted(): void {
     this.popNextTetromino()
@@ -66,7 +61,7 @@ export default class TetrisComponent extends Vue {
       this.nextNextTetrominoIndicesSet = this.shuffle(this.nextNextTetrominoIndicesSet)
       this.flipFlopNextTetrominoIndicesSet = !this.flipFlopNextTetrominoIndicesSet
     }
-    this.tetromino = Tetrominos[result.value]
+    this.tetrominoIndex = result.value
 
     // If current tetromino and next tetromino are the same ones,
     // Vue.js cannot detect the "change" of the tetromino.
