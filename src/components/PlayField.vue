@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from "vue-property-decorator"
+import { Vue, Component, Prop, Watch, Emit } from "vue-property-decorator"
 import BoardConfigs from "../@types/BoardConfigs"
 import { Tetrominos } from "../Tetrominos"
 
@@ -127,7 +127,7 @@ export default class PlayField extends Vue {
         event.preventDefault()
         if (!this.isHoldTetrominoUsedNow) {
           this.clearTetromino()
-          this.$emit("hold-requested")
+          this.holdRequested()
         }
         break
     }
@@ -159,6 +159,9 @@ export default class PlayField extends Vue {
       this.onFlipFlopTurnChange()
     }
   }
+
+  @Emit("hold-requested")
+  holdRequested(): void {}
 
   paintBoardAll(): void {
     for (const [y, row] of this.colorBoard.entries()) {
