@@ -11,6 +11,7 @@ import { Tetrominos } from "../Tetrominos"
 @Component
 export default class Hold extends Vue {
   @Prop() holdTetrominoIndex!: number
+  @Prop() flipFlopHoldTetromino!: boolean
 
   canvas!: HTMLCanvasElement
   context!: CanvasRenderingContext2D
@@ -44,6 +45,11 @@ export default class Hold extends Vue {
       this.canvas.width,
       this.canvas.height
     )
+  }
+
+  @Watch("flipFlopHoldTetromino")
+  onFlipFlopHoldTetrominoChange(): void {
+    this.drawHoldTetromino()
   }
 
   drawHoldTetromino(): void {

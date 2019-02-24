@@ -1,6 +1,9 @@
 <template>
   <div id="tetris-component">
-    <hold :hold-tetromino-index="holdTetrominoIndex" />
+    <hold
+      :hold-tetromino-index="holdTetrominoIndex"
+      :flip-flop-hold-tetromino="flipFlopHoldTetromino"
+    />
     <play-field
       class="inline-block"
       :configs="configs"
@@ -44,6 +47,7 @@ export default class TetrisComponent extends Vue {
 
   flipFlopTurn: boolean = true
   flipFlopNextTetrominoIndicesSet: boolean = true
+  flipFlopHoldTetromino: boolean = true
   isHoldTetrominoUsedNow: boolean = false
 
   nextTetrominoIndicesSet: number[] = this.shuffle(Array.from(Array(Tetrominos.length).keys()))
@@ -62,6 +66,7 @@ export default class TetrisComponent extends Vue {
 
     if (this.holdTetrominoIndex === undefined) {
       this.holdTetrominoIndex = this.tetrominoIndex
+      this.flipFlopHoldTetromino = !this.flipFlopHoldTetromino
       this.popNextTetromino()
       return
     }
@@ -71,6 +76,7 @@ export default class TetrisComponent extends Vue {
     this.holdTetrominoIndex = this.tetrominoIndex
     this.tetrominoIndex = tmp
 
+    this.flipFlopHoldTetromino = !this.flipFlopHoldTetromino
     this.isHoldTetrominoUsedNow = true
   }
 
