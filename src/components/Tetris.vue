@@ -1,11 +1,18 @@
 <template>
   <div id="tetris-component">
+    <hold
+      class="inline-block"
+      :hold-tetromino-index="holdTetrominoIndex"
+      :flip-flop-hold-tetromino="flipFlopHoldTetromino"
+    />
     <play-field
       class="inline-block"
       :configs="configs"
       :tetromino-index="tetrominoIndex"
       :flip-flop-turn="flipFlopTurn"
+      :is-hold-tetromino-used-now="isHoldTetrominoUsedNow"
       @tetromino-grounded="popNextTetromino"
+      @hold-requested="handleHoldRequested"
     />
     <next-preview
       class="inline-block"
@@ -19,6 +26,7 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator"
+import Hold from "./Hold.vue"
 import PlayField from "./PlayField.vue"
 import NextPreview from "./NextPreview.vue"
 import BoardConfigs from "../@types/BoardConfigs"
@@ -26,6 +34,7 @@ import { Tetrominos } from "../Tetrominos"
 
 @Component({
   components: {
+    Hold,
     PlayField,
     NextPreview
   }
@@ -39,18 +48,41 @@ export default class TetrisComponent extends Vue {
 
   flipFlopTurn: boolean = true
   flipFlopNextTetrominoIndicesSet: boolean = true
+  flipFlopHoldTetromino: boolean = true
+  isHoldTetrominoUsedNow: boolean = false
 
   nextTetrominoIndicesSet: number[] = this.shuffle(Array.from(Array(Tetrominos.length).keys()))
   nextNextTetrominoIndicesSet: number[] = this.shuffle(Array.from(Array(Tetrominos.length).keys()))
   tetrominoIndicesIterator: IterableIterator<number> = this.nextTetrominoIndicesSet.values()
 
   tetrominoIndex: number = this.nextTetrominoIndicesSet[0]
+  holdTetrominoIndex: number = -1
 
   mounted(): void {
     this.popNextTetromino()
   }
 
+  handleHoldRequested(): void {
+    if (this.isHoldTetrominoUsedNow) return
+
+    // swap
+    const tmp: number = this.holdTetrominoIndex
+    this.holdTetrominoIndex = this.tetrominoIndex
+    this.tetrominoIndex = tmp
+
+    this.flipFlopHoldTetromino = !this.flipFlopHoldTetromino
+
+    if (this.tetrominoIndex === -1) {
+      this.popNextTetromino()
+      return
+    }
+
+    this.isHoldTetrominoUsedNow = true
+  }
+
   popNextTetromino(): void {
+    this.isHoldTetrominoUsedNow = false
+
     let result: IteratorResult<number> = this.tetrominoIndicesIterator.next()
     if (result.done) {
       // shallow copy

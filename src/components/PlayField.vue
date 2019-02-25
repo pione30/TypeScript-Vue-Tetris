@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from "vue-property-decorator"
+import { Vue, Component, Prop, Watch, Emit } from "vue-property-decorator"
 import BoardConfigs from "../@types/BoardConfigs"
 import { Tetrominos } from "../Tetrominos"
 
@@ -14,6 +14,7 @@ export default class PlayField extends Vue {
   @Prop() configs!: BoardConfigs
   @Prop() tetrominoIndex!: number
   @Prop() flipFlopTurn!: boolean
+  @Prop() isHoldTetrominoUsedNow!: boolean
 
   isBlockFilled!: boolean[][]
   colorBoard!: string[][]
@@ -71,6 +72,7 @@ export default class PlayField extends Vue {
     this.paintBoardAll()
 
     window.addEventListener("keydown", this.tetriminoController)
+    window.addEventListener("keydown", this.holdController)
   }
 
   tetriminoController: (event: KeyboardEvent) => void = event => {
@@ -117,6 +119,53 @@ export default class PlayField extends Vue {
     }
   }
 
+  holdController: (event: KeyboardEvent) => void = event => {
+    switch (event.keyCode) {
+      case 82:
+      case 85:
+        // R or U
+        event.preventDefault()
+        this.holdRequested()
+        break
+    }
+  }
+
+  @Watch("flipFlopTurn")
+  onFlipFlopTurnChange(): void {
+    clearInterval(this.intervalID)
+
+    // start current turn
+    this.currentX = Math.floor(this.configs.width / 2) - 1
+    this.currentY = 1
+    this.rotation = 0
+
+    this.drawTetromino()
+
+    if (this.isGameOver()) {
+      window.removeEventListener("keydown", this.tetriminoController)
+      window.removeEventListener("keydown", this.holdController)
+      this.$emit("game-over")
+      return
+    }
+
+    this.intervalID = setInterval(() => this.moveDown(), 1000)
+  }
+
+  @Watch("isHoldTetrominoUsedNow")
+  onIsHoldTetrominoUsedNowChange(isUsedNow: boolean): void {
+    if (isUsedNow) {
+      this.onFlipFlopTurnChange()
+    }
+  }
+
+  @Emit("hold-requested")
+  holdRequested(): void {
+    if (!this.isHoldTetrominoUsedNow) {
+      clearInterval(this.intervalID)
+      this.clearTetromino()
+    }
+  }
+
   paintBoardAll(): void {
     for (const [y, row] of this.colorBoard.entries()) {
       for (const [x, color] of row.entries()) {
@@ -135,24 +184,6 @@ export default class PlayField extends Vue {
         )
       }
     }
-  }
-
-  @Watch("flipFlopTurn")
-  onFlipFlopTurnChange(): void {
-    // start current turn
-    this.currentX = Math.floor(this.configs.width / 2) - 1
-    this.currentY = 1
-    this.rotation = 0
-
-    this.drawTetromino()
-
-    if (this.isGameOver()) {
-      window.removeEventListener("keydown", this.tetriminoController)
-      this.$emit("game-over")
-      return
-    }
-
-    this.intervalID = setInterval(() => this.moveDown(), 1000)
   }
 
   drawTetromino(): void {
