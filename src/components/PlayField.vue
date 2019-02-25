@@ -125,10 +125,7 @@ export default class PlayField extends Vue {
       case 85:
         // R or U
         event.preventDefault()
-        if (!this.isHoldTetrominoUsedNow) {
-          this.clearTetromino()
-          this.holdRequested()
-        }
+        this.holdRequested()
         break
     }
   }
@@ -162,7 +159,12 @@ export default class PlayField extends Vue {
   }
 
   @Emit("hold-requested")
-  holdRequested(): void {}
+  holdRequested(): void {
+    if (!this.isHoldTetrominoUsedNow) {
+      clearInterval(this.intervalID)
+      this.clearTetromino()
+    }
+  }
 
   paintBoardAll(): void {
     for (const [y, row] of this.colorBoard.entries()) {
