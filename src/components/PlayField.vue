@@ -144,7 +144,7 @@ export default class PlayField extends Vue {
     if (this.isGameOver()) {
       window.removeEventListener("keydown", this.tetriminoController)
       window.removeEventListener("keydown", this.holdController)
-      this.$emit("game-over")
+      this.gameOver()
       return
     }
 
@@ -165,6 +165,12 @@ export default class PlayField extends Vue {
       this.clearTetromino()
     }
   }
+
+  @Emit("tetromino-grounded")
+  tetrominoGrounded(): void {}
+
+  @Emit("game-over")
+  gameOver(): void {}
 
   paintBoardAll(): void {
     for (const [y, row] of this.colorBoard.entries()) {
@@ -275,7 +281,7 @@ export default class PlayField extends Vue {
             clearInterval(this.intervalID)
             this.fillBlocksAndColorByTetromino()
             this.deleteCompletedLines()
-            this.$emit("tetromino-grounded")
+            this.tetrominoGrounded()
             return false
           }
         }
