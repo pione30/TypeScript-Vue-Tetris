@@ -166,6 +166,9 @@ export default class PlayField extends Vue {
     }
   }
 
+  @Emit("tetromino-grounded")
+  tetrominoGrounded(): void {}
+
   paintBoardAll(): void {
     for (const [y, row] of this.colorBoard.entries()) {
       for (const [x, color] of row.entries()) {
@@ -275,7 +278,7 @@ export default class PlayField extends Vue {
             clearInterval(this.intervalID)
             this.fillBlocksAndColorByTetromino()
             this.deleteCompletedLines()
-            this.$emit("tetromino-grounded")
+            this.tetrominoGrounded()
             return false
           }
         }
