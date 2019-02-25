@@ -65,19 +65,18 @@ export default class TetrisComponent extends Vue {
   handleHoldRequested(): void {
     if (this.isHoldTetrominoUsedNow) return
 
-    if (this.holdTetrominoIndex === -1) {
-      this.holdTetrominoIndex = this.tetrominoIndex
-      this.flipFlopHoldTetromino = !this.flipFlopHoldTetromino
-      this.popNextTetromino()
-      return
-    }
-
     // swap
     const tmp: number = this.holdTetrominoIndex
     this.holdTetrominoIndex = this.tetrominoIndex
     this.tetrominoIndex = tmp
 
     this.flipFlopHoldTetromino = !this.flipFlopHoldTetromino
+
+    if (this.tetrominoIndex === -1) {
+      this.popNextTetromino()
+      return
+    }
+
     this.isHoldTetrominoUsedNow = true
   }
 
