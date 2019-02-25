@@ -1,6 +1,9 @@
 <template>
-  <div id="next-preview-canvas-container">
-    <canvas id="next-preview-canvas" />
+  <div>
+    <p class="label">NEXT</p>
+    <div id="next-preview-canvas-container">
+      <canvas id="next-preview-canvas" />
+    </div>
   </div>
 </template>
 
@@ -25,7 +28,6 @@ export default class NextPreview extends Vue {
   unitHeight!: number
   canvasBlockWidth: number = 5
   canvasBlockHeightPerTetromino: number = 4
-  canvasTextBlockHeight: number = 1
 
   mounted(): void {
     const canvasContainer: HTMLElement = document.getElementById(
@@ -37,44 +39,22 @@ export default class NextPreview extends Vue {
     this.canvas.width = canvasContainer.clientWidth
     this.canvas.height = canvasContainer.clientHeight
     this.unitWidth = this.canvas.width / this.canvasBlockWidth
-    this.unitHeight =
-      this.canvas.height /
-      (this.canvasTextBlockHeight + this.canvasBlockHeightPerTetromino * this.previewNum)
-
-    this.context.font = "25px sans-serif"
-    this.context.textAlign = "center"
-    this.context.fillText("NEXT", this.canvas.width / 2, this.unitHeight / 2)
+    this.unitHeight = this.canvas.height / (this.canvasBlockHeightPerTetromino * this.previewNum)
 
     this.context.strokeStyle = "lightgray"
-    this.context.strokeRect(
-      0,
-      this.canvasTextBlockHeight * this.unitHeight,
-      this.canvas.width,
-      this.canvas.height
-    )
+    this.context.strokeRect(0, 0, this.canvas.width, this.canvas.height)
   }
 
   drawPreviewTetrominos(): void {
     // clear out current preview
-    this.context.clearRect(
-      0,
-      this.canvasTextBlockHeight * this.unitHeight,
-      this.canvas.width,
-      this.canvas.height
-    )
-    this.context.strokeRect(
-      0,
-      this.canvasTextBlockHeight * this.unitHeight,
-      this.canvas.width,
-      this.canvas.height
-    )
+    this.context.clearRect(0, 0, this.canvas.width, this.canvas.height)
+    this.context.strokeRect(0, 0, this.canvas.width, this.canvas.height)
 
     for (let i = 0; i < this.previewNum; i++) {
       const tetromino: Tetromino = Tetrominos[this.previewIndiceSet[i]]
       const rotation = 0
       const adjustX: number = (this.canvasBlockWidth - tetromino.blocks[rotation][0].length) / 2
-      const adjustY: number =
-        this.canvasTextBlockHeight + i * this.canvasBlockHeightPerTetromino + 1
+      const adjustY: number = i * this.canvasBlockHeightPerTetromino + 1
 
       for (const [dy, row] of tetromino.blocks[rotation].entries()) {
         for (const [dx, blockElement] of row.entries()) {
@@ -105,13 +85,15 @@ export default class NextPreview extends Vue {
 </script>
 
 <style>
+.label {
+  margin: 40px 30px 10px;
+}
 #next-preview-canvas-container {
   position: relative;
-  margin: 40px auto 10px 20px;
   height: 0;
-  width: 10%;
+  width: 100%;
   overflow: hidden;
-  padding-top: 26%; /* (1 + 4 * 3) / 5 * 0.1 */
+  padding-top: 240%; /* 4 * 3 / 5 */
 }
 #next-preview-canvas {
   position: absolute;

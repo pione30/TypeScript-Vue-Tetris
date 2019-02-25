@@ -377,7 +377,7 @@ export default class PlayField extends Vue {
 <style>
 #play-field-canvas-container {
   position: relative;
-  margin: 10px auto;
+  margin: 10px 20px;
   height: 0;
   width: 27%;
   overflow: hidden;
