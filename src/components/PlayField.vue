@@ -149,7 +149,7 @@ export default class PlayField extends Vue {
       return
     }
 
-    this.intervalID = setInterval(() => this.moveDown(), 1000)
+    this.intervalID = setInterval(() => this.moveDown(), levelScoreModule.dropIntervalMs)
   }
 
   @Watch("isHoldTetrominoUsedNow")
