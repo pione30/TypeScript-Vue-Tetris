@@ -4,15 +4,21 @@
     <div id="next-preview-canvas-container">
       <canvas id="next-preview-canvas" />
     </div>
+    <level-score class="level-score" />
   </div>
 </template>
 
 <script lang="ts">
 import { Vue, Component, Prop, Watch } from "vue-property-decorator"
+import LevelScore from "./LevelScore.vue"
 import Tetromino from "../@types/Tetromino"
 import { Tetrominos } from "../Tetrominos"
 
-@Component
+@Component({
+  components: {
+    LevelScore
+  }
+})
 export default class NextPreview extends Vue {
   @Prop() nextTetrominoIndicesSet!: number[]
   @Prop() nextNextTetrominoIndicesSet!: number[]
@@ -101,5 +107,9 @@ export default class NextPreview extends Vue {
   left: 0;
   height: 100%;
   width: 100%;
+}
+
+.level-score {
+  margin: 40px 0px;
 }
 </style>
