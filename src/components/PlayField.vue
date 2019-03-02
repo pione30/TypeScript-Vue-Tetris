@@ -8,6 +8,7 @@
 import { Vue, Component, Prop, Watch, Emit } from "vue-property-decorator"
 import BoardConfigs from "../@types/BoardConfigs"
 import { Tetrominos } from "../Tetrominos"
+import { levelScoreModule } from "../store/modules/LevelScore"
 
 @Component
 export default class PlayField extends Vue {
@@ -357,6 +358,7 @@ export default class PlayField extends Vue {
         this.colorBoard.splice(1, 0, unitColorLine)
       }
 
+      levelScoreModule.deleteLines(filledLineIndices.length)
       this.paintBoardAll()
     }
   }
