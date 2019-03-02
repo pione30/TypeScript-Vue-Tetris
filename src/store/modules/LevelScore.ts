@@ -42,6 +42,16 @@ class LevelScore extends VuexModule {
   public get currentScore(): number {
     return this.score
   }
+
+  public get dropIntervalMs(): number {
+    const frame: number = 1000 / 60
+
+    return Math.max(
+      1000 - 5 * this.level * frame,
+      (5 - Math.floor((this.level - 11) / 2)) * frame,
+      frame
+    )
+  }
 }
 
 export const levelScoreModule = getModule(LevelScore)
