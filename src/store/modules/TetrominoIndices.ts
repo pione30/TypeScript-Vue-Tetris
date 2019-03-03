@@ -88,7 +88,6 @@ class TetrominoIndices extends VuexModule {
 
     if (this.getCurrentTetrominoIndex === -1) {
       this.popNextTetromino()
-      return
     }
 
     this.SET_IS_HOLD_TETROMINO_USED(true)

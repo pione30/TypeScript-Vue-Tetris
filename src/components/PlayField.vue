@@ -155,7 +155,11 @@ export default class PlayField extends Vue {
     return tetrominoIndicesModule.getCurrentTetrominoIndex
   }
 
-  @Watch("tetrominoIndicesModule.isHoldTetrominoUsedNow")
+  get isHoldTetrominoUsedNow(): boolean {
+    return tetrominoIndicesModule.isHoldTetrominoUsedNow
+  }
+
+  @Watch("isHoldTetrominoUsedNow")
   onIsHoldTetrominoUsedNowChange(isUsedNow: boolean): void {
     if (isUsedNow) {
       this.execCurrentTurn()
@@ -163,7 +167,7 @@ export default class PlayField extends Vue {
   }
 
   holdRequest(): void {
-    if (!tetrominoIndicesModule.isHoldTetrominoUsedNow) {
+    if (!this.isHoldTetrominoUsedNow) {
       clearInterval(this.intervalID)
       this.clearTetromino()
     }
