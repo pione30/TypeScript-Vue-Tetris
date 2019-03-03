@@ -282,6 +282,7 @@ export default class PlayField extends Vue {
             clearInterval(this.intervalID)
             this.fillBlocksAndColorByTetromino()
             this.deleteCompletedLines()
+            tetrominoIndicesModule.SET_IS_HOLD_TETROMINO_USED(false)
             tetrominoIndicesModule.popNextTetromino()
             this.execCurrentTurn()
             return false

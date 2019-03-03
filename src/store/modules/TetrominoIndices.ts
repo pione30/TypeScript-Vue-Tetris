@@ -54,8 +54,6 @@ class TetrominoIndices extends VuexModule {
 
   @Action
   public popNextTetromino(): void {
-    this.SET_IS_HOLD_TETROMINO_USED(false)
-
     if (this.tetrominoIndicesResult.done) {
       this.ROTATE_FORWARD_NEXT_TETROMINO_INDICES_SETS()
       this.SET_TETROMINO_INDICES_ITERATOR()
