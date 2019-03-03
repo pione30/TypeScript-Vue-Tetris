@@ -8,14 +8,12 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from "vue-property-decorator"
+import { Vue, Component, Watch } from "vue-property-decorator"
 import { Tetrominos } from "../Tetrominos"
+import { tetrominoIndicesModule } from "../store/modules/TetrominoIndices"
 
 @Component
 export default class Hold extends Vue {
-  @Prop() holdTetrominoIndex!: number
-  @Prop() flipFlopHoldTetromino!: boolean
-
   canvas!: HTMLCanvasElement
   context!: CanvasRenderingContext2D
   unitWidth!: number
@@ -39,8 +37,12 @@ export default class Hold extends Vue {
     this.context.strokeRect(0, 0, this.canvas.width, this.canvas.height)
   }
 
-  @Watch("flipFlopHoldTetromino")
-  onFlipFlopHoldTetrominoChange(): void {
+  get holdTetrominoIndex(): number {
+    return tetrominoIndicesModule.getCurrentHoldTetrominoIndex
+  }
+
+  @Watch("holdTetrominoIndex")
+  onHoldTetrominoIndexChange(): void {
     this.drawHoldTetromino()
   }
 

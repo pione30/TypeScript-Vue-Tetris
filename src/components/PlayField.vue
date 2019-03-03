@@ -9,13 +9,11 @@ import { Vue, Component, Prop, Watch, Emit } from "vue-property-decorator"
 import BoardConfigs from "../@types/BoardConfigs"
 import { Tetrominos } from "../Tetrominos"
 import { levelScoreModule } from "../store/modules/LevelScore"
+import { tetrominoIndicesModule } from "../store/modules/TetrominoIndices"
 
 @Component
 export default class PlayField extends Vue {
   @Prop() configs!: BoardConfigs
-  @Prop() tetrominoIndex!: number
-  @Prop() flipFlopTurn!: boolean
-  @Prop() isHoldTetrominoUsedNow!: boolean
 
   isBlockFilled!: boolean[][]
   colorBoard!: string[][]
@@ -74,6 +72,8 @@ export default class PlayField extends Vue {
 
     window.addEventListener("keydown", this.tetriminoController)
     window.addEventListener("keydown", this.holdController)
+
+    this.execCurrentTurn()
   }
 
   tetriminoController: (event: KeyboardEvent) => void = event => {
@@ -126,13 +126,12 @@ export default class PlayField extends Vue {
       case 85:
         // R or U
         event.preventDefault()
-        this.holdRequested()
+        this.holdRequest()
         break
     }
   }
 
-  @Watch("flipFlopTurn")
-  onFlipFlopTurnChange(): void {
+  execCurrentTurn(): void {
     clearInterval(this.intervalID)
 
     // start current turn
@@ -152,23 +151,28 @@ export default class PlayField extends Vue {
     this.intervalID = setInterval(() => this.moveDown(), levelScoreModule.dropIntervalMs)
   }
 
+  get tetrominoIndex(): number {
+    return tetrominoIndicesModule.getCurrentTetrominoIndex
+  }
+
+  get isHoldTetrominoUsedNow(): boolean {
+    return tetrominoIndicesModule.isHoldTetrominoUsedNow
+  }
+
   @Watch("isHoldTetrominoUsedNow")
   onIsHoldTetrominoUsedNowChange(isUsedNow: boolean): void {
     if (isUsedNow) {
-      this.onFlipFlopTurnChange()
+      this.execCurrentTurn()
     }
   }
 
-  @Emit("hold-requested")
-  holdRequested(): void {
+  holdRequest(): void {
     if (!this.isHoldTetrominoUsedNow) {
       clearInterval(this.intervalID)
       this.clearTetromino()
     }
+    tetrominoIndicesModule.holdRequest()
   }
-
-  @Emit("tetromino-grounded")
-  tetrominoGrounded(): void {}
 
   @Emit("game-over")
   gameOver(): void {}
@@ -282,7 +286,9 @@ export default class PlayField extends Vue {
             clearInterval(this.intervalID)
             this.fillBlocksAndColorByTetromino()
             this.deleteCompletedLines()
-            this.tetrominoGrounded()
+            tetrominoIndicesModule.SET_IS_HOLD_TETROMINO_USED(false)
+            tetrominoIndicesModule.popNextTetromino()
+            this.execCurrentTurn()
             return false
           }
         }

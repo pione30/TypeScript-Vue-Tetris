@@ -9,10 +9,11 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Watch } from "vue-property-decorator"
+import { Vue, Component, Watch } from "vue-property-decorator"
 import LevelScore from "./LevelScore.vue"
 import Tetromino from "../@types/Tetromino"
 import { Tetrominos } from "../Tetrominos"
+import { tetrominoIndicesModule } from "../store/modules/TetrominoIndices"
 
 @Component({
   components: {
@@ -20,18 +21,11 @@ import { Tetrominos } from "../Tetrominos"
   }
 })
 export default class NextPreview extends Vue {
-  @Prop() nextTetrominoIndicesSet!: number[]
-  @Prop() nextNextTetrominoIndicesSet!: number[]
-  @Prop() flipFlopTurn!: boolean
-  @Prop() flipFlopNextTetrominoIndicesSet!: boolean
-
-  previewIndiceSet: number[] = this.nextTetrominoIndicesSet.concat(this.nextNextTetrominoIndicesSet)
-  previewNum: number = 3
-
   canvas!: HTMLCanvasElement
   context!: CanvasRenderingContext2D
   unitWidth!: number
   unitHeight!: number
+  previewNum: number = 3
   canvasBlockWidth: number = 5
   canvasBlockHeightPerTetromino: number = 4
 
@@ -49,6 +43,7 @@ export default class NextPreview extends Vue {
 
     this.context.strokeStyle = "lightgray"
     this.context.strokeRect(0, 0, this.canvas.width, this.canvas.height)
+    this.drawPreviewTetrominos()
   }
 
   drawPreviewTetrominos(): void {
@@ -57,7 +52,7 @@ export default class NextPreview extends Vue {
     this.context.strokeRect(0, 0, this.canvas.width, this.canvas.height)
 
     for (let i = 0; i < this.previewNum; i++) {
-      const tetromino: Tetromino = Tetrominos[this.previewIndiceSet[i]]
+      const tetromino: Tetromino = Tetrominos[this.previewIndicesSet[i]]
       const rotation = 0
       const adjustX: number = (this.canvasBlockWidth - tetromino.blocks[rotation][0].length) / 2
       const adjustY: number = i * this.canvasBlockHeightPerTetromino + 1
@@ -78,14 +73,13 @@ export default class NextPreview extends Vue {
     }
   }
 
-  @Watch("flipFlopTurn")
-  onFlipFlopTurnChange(): void {
-    this.previewIndiceSet.shift()
-    this.drawPreviewTetrominos()
+  get previewIndicesSet(): number[] {
+    return tetrominoIndicesModule.getPreviewIndiceSet
   }
-  @Watch("flipFlopNextTetrominoIndicesSet")
-  onFlipFlopNextTetrominoIndicesSetChange(): void {
-    this.previewIndiceSet.push.apply(this.previewIndiceSet, this.nextNextTetrominoIndicesSet)
+
+  @Watch("previewIndicesSet")
+  onPreviewIndicesSetChange(): void {
+    this.drawPreviewTetrominos()
   }
 }
 </script>
