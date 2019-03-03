@@ -1,26 +1,8 @@
 <template>
   <div id="tetris-component">
-    <hold
-      class="inline-block"
-      :hold-tetromino-index="holdTetrominoIndex"
-      :flip-flop-hold-tetromino="flipFlopHoldTetromino"
-    />
-    <play-field
-      class="inline-block"
-      :configs="configs"
-      :tetromino-index="tetrominoIndex"
-      :flip-flop-turn="flipFlopTurn"
-      :is-hold-tetromino-used-now="isHoldTetrominoUsedNow"
-      @tetromino-grounded="popNextTetromino"
-      @hold-requested="handleHoldRequested"
-    />
-    <next-preview
-      class="inline-block"
-      :next-tetromino-indices-set="nextTetrominoIndicesSet"
-      :next-next-tetromino-indices-set="nextNextTetrominoIndicesSet"
-      :flip-flop-turn="flipFlopTurn"
-      :flip-flop-next-tetromino-indices-set="flipFlopNextTetrominoIndicesSet"
-    />
+    <hold class="inline-block" />
+    <play-field class="inline-block" :configs="configs" />
+    <next-preview class="inline-block" />
   </div>
 </template>
 
@@ -30,7 +12,6 @@ import Hold from "./Hold.vue"
 import PlayField from "./PlayField.vue"
 import NextPreview from "./NextPreview.vue"
 import BoardConfigs from "../@types/BoardConfigs"
-import { Tetrominos } from "../Tetrominos"
 
 @Component({
   components: {
@@ -44,71 +25,6 @@ export default class TetrisComponent extends Vue {
   configs: BoardConfigs = {
     width: 10 + 2,
     height: 20 + 2
-  }
-
-  flipFlopTurn: boolean = true
-  flipFlopNextTetrominoIndicesSet: boolean = true
-  flipFlopHoldTetromino: boolean = true
-  isHoldTetrominoUsedNow: boolean = false
-
-  nextTetrominoIndicesSet: number[] = this.shuffle(Array.from(Array(Tetrominos.length).keys()))
-  nextNextTetrominoIndicesSet: number[] = this.shuffle(Array.from(Array(Tetrominos.length).keys()))
-  tetrominoIndicesIterator: IterableIterator<number> = this.nextTetrominoIndicesSet.values()
-
-  tetrominoIndex: number = this.nextTetrominoIndicesSet[0]
-  holdTetrominoIndex: number = -1
-
-  mounted(): void {
-    this.popNextTetromino()
-  }
-
-  handleHoldRequested(): void {
-    if (this.isHoldTetrominoUsedNow) return
-
-    // swap
-    const tmp: number = this.holdTetrominoIndex
-    this.holdTetrominoIndex = this.tetrominoIndex
-    this.tetrominoIndex = tmp
-
-    this.flipFlopHoldTetromino = !this.flipFlopHoldTetromino
-
-    if (this.tetrominoIndex === -1) {
-      this.popNextTetromino()
-      return
-    }
-
-    this.isHoldTetrominoUsedNow = true
-  }
-
-  popNextTetromino(): void {
-    this.isHoldTetrominoUsedNow = false
-
-    let result: IteratorResult<number> = this.tetrominoIndicesIterator.next()
-    if (result.done) {
-      // shallow copy
-      this.nextTetrominoIndicesSet = this.nextNextTetrominoIndicesSet.slice()
-      this.tetrominoIndicesIterator = this.nextTetrominoIndicesSet.values()
-      result = this.tetrominoIndicesIterator.next()
-
-      this.nextNextTetrominoIndicesSet = this.shuffle(this.nextNextTetrominoIndicesSet)
-      this.flipFlopNextTetrominoIndicesSet = !this.flipFlopNextTetrominoIndicesSet
-    }
-    this.tetrominoIndex = result.value
-
-    // If current tetromino and next tetromino are the same ones,
-    // Vue.js cannot detect the "change" of the tetromino.
-    // So tetromino cannot be used to watch the turn changes and
-    // we need another variable which just only tells "turn-changing" information.
-    this.flipFlopTurn = !this.flipFlopTurn
-  }
-
-  // Fisher–Yates shuffle algorithm
-  shuffle(array: number[]): number[] {
-    for (let i: number = array.length - 1; i > 0; i--) {
-      const j: number = Math.floor(Math.random() * (i + 1))
-      ;[array[i], array[j]] = [array[j], array[i]]
-    }
-    return array
   }
 }
 </script>
