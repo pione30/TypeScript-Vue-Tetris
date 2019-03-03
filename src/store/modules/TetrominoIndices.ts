@@ -54,13 +54,13 @@ class TetrominoIndices extends VuexModule {
 
   @Action
   public popNextTetromino(): void {
+    this.SET_NEXT_TETROMINO_INDICES_RESULT()
     if (this.tetrominoIndicesResult.done) {
       this.ROTATE_FORWARD_NEXT_TETROMINO_INDICES_SETS()
       this.SET_TETROMINO_INDICES_ITERATOR()
       this.SET_NEXT_TETROMINO_INDICES_RESULT()
     }
     this.SET_CURRENT_TETROMINO_INDEX()
-    this.SET_NEXT_TETROMINO_INDICES_RESULT()
   }
 
   @Action
