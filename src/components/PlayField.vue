@@ -382,15 +382,33 @@ export default class PlayField extends Vue {
 }
 </script>
 
-<style>
-#play-field-canvas-container {
+<style lang="scss">
+$field_width: 22;
+$field_height: 12;
+
+@mixin play_field_canvas_container_mixin($pc_container_width: 27%, $sp_container_width: 58%) {
+  #play-field-canvas-container {
+    width: $pc_container_width;
+    padding-top: $pc_container_width * $field_width / $field_height;
+    @content;
+  }
+
+  @media screen and (max-width: 999px) {
+    #play-field-canvas-container {
+      width: $sp_container_width;
+      padding-top: $sp_container_width * $field_width / $field_height;
+      @content;
+    }
+  }
+}
+
+@include play_field_canvas_container_mixin() {
   position: relative;
   margin: 10px 20px;
   height: 0;
-  width: 27%;
   overflow: hidden;
-  padding-top: 49.5%; /* 22 / 12 * 0.27 */
 }
+
 #play-field-canvas {
   position: absolute;
   top: 0;
