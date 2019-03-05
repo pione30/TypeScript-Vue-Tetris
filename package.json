@@ -8,7 +8,7 @@
     "build": "webpack --config webpack.prod.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "microsoft",
+  "author": "pione30",
   "license": "Apache License 2.0",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^1.1.0",
