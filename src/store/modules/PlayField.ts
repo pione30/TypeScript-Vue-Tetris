@@ -36,23 +36,12 @@ class PlayField extends VuexModule {
   private unitWidth: number = 0
   private unitHeight: number = 0
 
-  public get getFieldSize(): { [key: string]: number } {
-    return {
-      fieldWidth: this.fieldWidth,
-      fieldHeight: this.fieldHeight
-    }
-  }
-
   public get getTurnNum(): number {
     return this.turnNum
   }
 
   public get isHoldTetrominoUsedNow(): boolean {
     return this.isHoldTetrominoUsed
-  }
-
-  public get getColorBoard(): string[][] {
-    return this.colorBoard
   }
 
   public get isGameOver(): boolean {
