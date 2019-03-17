@@ -79,7 +79,7 @@ export default class PlayField extends Vue {
       case 85:
         // R or U
         event.preventDefault()
-        this.holdRequest()
+        playFieldModule.hold()
         break
     }
   }
@@ -109,12 +109,11 @@ export default class PlayField extends Vue {
   }
 
   get isHoldTetrominoUsedNow(): boolean {
-    return tetrominoIndicesModule.isHoldTetrominoUsedNow
+    return playFieldModule.isHoldTetrominoUsedNow
   }
 
   @Watch("turnNum")
   onTurnNumChange(): void {
-    tetrominoIndicesModule.SET_IS_HOLD_TETROMINO_USED(false)
     tetrominoIndicesModule.popNextTetromino()
 
     this.execCurrentTurn()
@@ -125,14 +124,6 @@ export default class PlayField extends Vue {
     if (isUsedNow) {
       this.execCurrentTurn()
     }
-  }
-
-  holdRequest(): void {
-    if (!this.isHoldTetrominoUsedNow) {
-      intervalModule.clearIntervalID()
-      playFieldModule.clearTetromino()
-    }
-    tetrominoIndicesModule.holdRequest()
   }
 
   @Emit("game-over")

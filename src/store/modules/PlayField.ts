@@ -3,6 +3,7 @@ import { Module, VuexModule, Mutation, Action, getModule } from "vuex-module-dec
 import { Tetrominos } from "../../Tetrominos"
 import { levelScoreModule } from "./LevelScore"
 import { intervalModule } from "./Interval"
+import { tetrominoIndicesModule } from "./TetrominoIndices"
 
 @Module({ dynamic: true, store, name: "playfield" })
 class PlayField extends VuexModule {
@@ -15,6 +16,8 @@ class PlayField extends VuexModule {
   private currentX: number = Math.floor(this.fieldWidth / 2) - 1
   private currentY: number = 1
   private rotation: number = 0
+
+  private isHoldTetrominoUsed: boolean = false
 
   private isBlockFilled: boolean[][] = Array.from(new Array(this.fieldHeight), () =>
     new Array(this.fieldWidth).fill(false)
@@ -42,6 +45,10 @@ class PlayField extends VuexModule {
 
   public get getTurnNum(): number {
     return this.turnNum
+  }
+
+  public get isHoldTetrominoUsedNow(): boolean {
+    return this.isHoldTetrominoUsed
   }
 
   public get getColorBoard(): string[][] {
@@ -270,6 +277,11 @@ class PlayField extends VuexModule {
   }
 
   @Mutation
+  public SET_IS_HOLD_TETROMINO_USED(payload: boolean): void {
+    this.isHoldTetrominoUsed = payload
+  }
+
+  @Mutation
   private FILL_BLOCKS_AND_COLOR_BY_TETROMINO(): void {
     for (const [dy, row] of Tetrominos[this.tetrominoIndex].blocks[this.rotation].entries()) {
       for (const [dx, blockElement] of row.entries()) {
@@ -380,6 +392,7 @@ class PlayField extends VuexModule {
     this.FILL_BLOCKS_AND_COLOR_BY_TETROMINO()
     this.DELETE_COMPLETED_LINES()
     this.PAINT_BOARD_ALL()
+    this.SET_IS_HOLD_TETROMINO_USED(false)
     this.INCREMENT_TURN_NUM()
   }
 
@@ -410,6 +423,16 @@ class PlayField extends VuexModule {
       this.ROTATE_RIGHT()
       this.DRAW_TETROMINO()
     }
+  }
+
+  @Action
+  public hold(): void {
+    if (this.isHoldTetrominoUsedNow) return
+
+    intervalModule.clearIntervalID()
+    tetrominoIndicesModule.holdTetromino()
+    this.CLEAR_TETROMINO()
+    this.SET_IS_HOLD_TETROMINO_USED(true)
   }
 }
 
