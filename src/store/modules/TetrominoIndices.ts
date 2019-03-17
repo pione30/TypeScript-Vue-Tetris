@@ -20,7 +20,6 @@ class TetrominoIndices extends VuexModule {
 
   private tetrominoIndex: number = this.tetrominoIndicesResult.value
   private holdTetrominoIndex: number = -1
-  private isHoldTetrominoUsed: boolean = false
 
   @Mutation
   private ROTATE_FORWARD_NEXT_TETROMINO_INDICES_SETS(): void {
@@ -61,11 +60,6 @@ class TetrominoIndices extends VuexModule {
     this.tetrominoIndex = tmp
   }
 
-  @Mutation
-  public SET_IS_HOLD_TETROMINO_USED(payload: boolean): void {
-    this.isHoldTetrominoUsed = payload
-  }
-
   @Action
   public popNextTetromino(): void {
     this.SET_NEXT_TETROMINO_INDICES_RESULT()
@@ -81,16 +75,12 @@ class TetrominoIndices extends VuexModule {
   }
 
   @Action
-  public holdRequest(): void {
-    if (this.isHoldTetrominoUsedNow) return
-
+  public holdTetromino(): void {
     this.SWAP_HOLD_AND_CURRENT_TETROMINO_INDEX()
 
     if (this.getCurrentTetrominoIndex === -1) {
       this.popNextTetromino()
     }
-
-    this.SET_IS_HOLD_TETROMINO_USED(true)
   }
 
   public get getPreviewIndiceSet(): number[] {
@@ -103,10 +93,6 @@ class TetrominoIndices extends VuexModule {
 
   public get getCurrentHoldTetrominoIndex(): number {
     return this.holdTetrominoIndex
-  }
-
-  public get isHoldTetrominoUsedNow(): boolean {
-    return this.isHoldTetrominoUsed
   }
 }
 
