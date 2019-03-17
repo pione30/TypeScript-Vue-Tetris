@@ -80,7 +80,6 @@ export default class PlayField extends Vue {
 
   execCurrentTurn(): void {
     playFieldModule.initCurrentTurn(this.tetrominoIndex)
-    playFieldModule.drawTetromino()
 
     if (playFieldModule.isGameOver) {
       window.removeEventListener("keydown", this.tetriminoController)

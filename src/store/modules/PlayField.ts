@@ -158,8 +158,12 @@ class PlayField extends VuexModule {
   }
 
   @Mutation
-  private INIT_CURRENT_TURN(tetrominoIndex: number): void {
+  private SET_TETROMINO_INDEX(tetrominoIndex: number): void {
     this.tetrominoIndex = tetrominoIndex
+  }
+
+  @Mutation
+  private SET_INITIAL_POSITIONS(): void {
     this.currentX = Math.floor(this.fieldWidth / 2) - 1
     this.currentY = 1
     this.rotation = 0
@@ -338,7 +342,9 @@ class PlayField extends VuexModule {
 
   @Action
   public initCurrentTurn(tetrominoIndex: number): void {
-    this.INIT_CURRENT_TURN(tetrominoIndex)
+    this.SET_TETROMINO_INDEX(tetrominoIndex)
+    this.SET_INITIAL_POSITIONS()
+    this.DRAW_TETROMINO()
   }
 
   @Action
