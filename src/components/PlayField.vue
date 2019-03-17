@@ -24,7 +24,6 @@ export default class PlayField extends Vue {
     playFieldModule.initialize({ canvasContainer: canvasContainer, canvas: canvas })
 
     window.addEventListener("keydown", this.tetriminoController)
-    window.addEventListener("keydown", this.holdController)
 
     this.execCurrentTurn()
   }
@@ -70,11 +69,6 @@ export default class PlayField extends Vue {
         event.preventDefault()
         playFieldModule.rotateRight()
         break
-    }
-  }
-
-  holdController: (event: KeyboardEvent) => void = event => {
-    switch (event.keyCode) {
       case 82:
       case 85:
         // R or U
@@ -90,7 +84,6 @@ export default class PlayField extends Vue {
 
     if (playFieldModule.isGameOver) {
       window.removeEventListener("keydown", this.tetriminoController)
-      window.removeEventListener("keydown", this.holdController)
       this.gameOver()
       return
     }
