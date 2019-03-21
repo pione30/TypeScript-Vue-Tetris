@@ -2,32 +2,32 @@
   <div class="flex-container mobile-controller-flex-container">
     <div class="left-hand">
       <div class="flex-container ">
-        <div id="hold" class="button hold L"></div>
+        <div data-button-name="hold" class="button hold L"></div>
       </div>
       <div class="cross-keys">
         <div class="flex-container flex-justify-content-center">
-          <div id="up" class="button circle"></div>
+          <div data-button-name="up" class="button circle"></div>
         </div>
         <div class="flex-container flex-justify-content-center">
-          <div id="left" class="button circle"></div>
+          <div data-button-name="left" class="button circle"></div>
           <div class="button circle invisible"></div>
-          <div id="right" class="button circle"></div>
+          <div data-button-name="right" class="button circle"></div>
         </div>
         <div class="flex-container flex-justify-content-center">
-          <div id="down" class="button circle"></div>
+          <div data-button-name="down" class="button circle"></div>
         </div>
       </div>
     </div>
     <div class="right-hand">
-      <div id="hold" class="button hold R"></div>
+      <div data-button-name="hold" class="button hold R"></div>
       <div class="button circle invisible"></div>
       <div class="flex-container flex-justify-content-center">
-        <div id="rotateLeft" class="button circle"></div>
+        <div data-button-name="rotateLeft" class="button circle"></div>
         <div class="button circle invisible"></div>
       </div>
       <div class="flex-container flex-justify-content-center">
         <div class="button circle invisible"></div>
-        <div id="rotateRight" class="button circle"></div>
+        <div data-button-name="rotateRight" class="button circle"></div>
       </div>
     </div>
   </div>
@@ -62,7 +62,7 @@ export default class MobileController extends Vue {
 
   mobileButtonsController: (event: Event) => void = event => {
     const target = event.target as HTMLElement
-    switch (target.id) {
+    switch (target.getAttribute("data-button-name")) {
       case "hold":
         event.preventDefault()
         playFieldModule.hold()
