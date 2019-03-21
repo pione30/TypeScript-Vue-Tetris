@@ -1,12 +1,35 @@
 <template>
-  <div>
-    <div id="hold" class="button square-rotate"></div>
-    <div id="up" class="button circle"></div>
-    <div id="left" class="button circle"></div>
-    <div id="right" class="button circle"></div>
-    <div id="down" class="button circle"></div>
-    <div id="rotateLeft" class="button circle"></div>
-    <div id="rotateRight" class="button circle"></div>
+  <div class="flex-container mobile-controller-flex-container">
+    <div class="left-hand">
+      <div class="flex-container ">
+        <div id="hold" class="button hold L"></div>
+      </div>
+      <div class="cross-keys">
+        <div class="flex-container flex-justify-content-center">
+          <div id="up" class="button circle"></div>
+        </div>
+        <div class="flex-container flex-justify-content-center">
+          <div id="left" class="button circle"></div>
+          <div class="button circle invisible"></div>
+          <div id="right" class="button circle"></div>
+        </div>
+        <div class="flex-container flex-justify-content-center">
+          <div id="down" class="button circle"></div>
+        </div>
+      </div>
+    </div>
+    <div class="right-hand">
+      <div id="hold" class="button hold R"></div>
+      <div class="button circle invisible"></div>
+      <div class="flex-container flex-justify-content-center">
+        <div id="rotateLeft" class="button circle"></div>
+        <div class="button circle invisible"></div>
+      </div>
+      <div class="flex-container flex-justify-content-center">
+        <div class="button circle invisible"></div>
+        <div id="rotateRight" class="button circle"></div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -80,17 +103,52 @@ export default class MobileController extends Vue {
 </script>
 
 <style lang="scss" scoped>
-.circle {
-  width: 100px;
-  height: 100px;
-  background: lightslategray;
-  border-radius: 50px;
-}
+@media screen and (min-width: 320px) {
+  .flex-container {
+    display: flex;
+  }
 
-.square-rotate {
-  width: 100px;
-  height: 100px;
-  background: lightslategray;
-  transform: rotate(45deg);
+  .flex-justify-content-center {
+    justify-content: center;
+  }
+
+  .mobile-controller-flex-container {
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .button {
+    background: lightslategray;
+  }
+
+  .invisible {
+    visibility: hidden;
+  }
+
+  .hold {
+    width: 250px;
+    height: 90px;
+    margin: 100px 2px 30px;
+  }
+
+  .L {
+    border-radius: 40px 0 0 0;
+  }
+
+  .R {
+    border-radius: 0 40px 0 0;
+  }
+
+  .circle {
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    margin: 8px;
+  }
+}
+@media screen and (min-width: 512px) {
+  .button {
+    display: none;
+  }
 }
 </style>
