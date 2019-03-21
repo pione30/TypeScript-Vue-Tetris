@@ -146,7 +146,7 @@ export default class MobileController extends Vue {
     margin: 8px;
   }
 }
-@media screen and (min-width: 512px) {
+@media screen and (min-width: 1000px) {
   .button {
     display: none;
   }
