@@ -73,10 +73,18 @@ export default class Hold extends Vue {
 }
 </script>
 
-<style>
-.label {
-  margin: 40px 30px 10px;
+<style lang="scss">
+@media screen and (min-width: 320px) {
+  .label {
+    margin: 10px 10px 10px;
+  }
 }
+@media screen and (min-width: 1000px) {
+  .label {
+    margin: 40px 30px 10px;
+  }
+}
+
 #hold-canvas-container {
   position: relative;
   height: 0;

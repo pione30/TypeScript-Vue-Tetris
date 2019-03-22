@@ -127,7 +127,7 @@ export default class PlayField extends Vue {
 $field_width: 22;
 $field_height: 12;
 
-@mixin play_field_canvas_container_mixin($pc_container_width: 27%, $sp_container_width: 58%) {
+@mixin play_field_canvas_container_mixin($pc_container_width: 27%, $sp_container_width: 50%) {
   #play-field-canvas-container {
     width: $pc_container_width;
     padding-top: $pc_container_width * $field_width / $field_height;

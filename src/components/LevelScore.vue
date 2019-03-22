@@ -26,4 +26,10 @@ export default class LevelScore extends Vue {
 }
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+@media screen and (max-width: 999px) {
+  p {
+    margin: 10px 0 10px;
+  }
+}
+</style>
