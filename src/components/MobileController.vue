@@ -126,23 +126,23 @@ export default class MobileController extends Vue {
   }
 
   .hold {
-    width: 250px;
-    height: 90px;
-    margin: 100px 2px 30px;
+    width: 150px;
+    height: 30px;
+    margin: 30px 2px 30px;
   }
 
   .L {
-    border-radius: 40px 0 0 0;
+    border-radius: 30px 0 0 0;
   }
 
   .R {
-    border-radius: 0 40px 0 0;
+    border-radius: 0 30px 0 0;
   }
 
   .circle {
-    width: 100px;
-    height: 100px;
-    border-radius: 50px;
+    width: 35px;
+    height: 35px;
+    border-radius: 20px;
     margin: 8px;
   }
 }
