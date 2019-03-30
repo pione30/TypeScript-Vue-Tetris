@@ -6,10 +6,10 @@
 
 <script lang="ts">
 import { Vue, Component, Watch, Emit } from "vue-property-decorator"
-import { levelScoreModule } from "../store/modules/LevelScore"
-import { tetrominoIndicesModule } from "../store/modules/TetrominoIndices"
-import { playFieldModule } from "../store/modules/PlayField"
-import { intervalModule } from "../store/modules/Interval"
+import { levelScoreModule } from "store/modules/LevelScore"
+import { tetrominoIndicesModule } from "store/modules/TetrominoIndices"
+import { playFieldModule } from "store/modules/PlayField"
+import { intervalModule } from "store/modules/Interval"
 
 @Component
 export default class PlayField extends Vue {

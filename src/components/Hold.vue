@@ -9,8 +9,8 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from "vue-property-decorator"
-import { Tetrominos } from "../Tetrominos"
-import { tetrominoIndicesModule } from "../store/modules/TetrominoIndices"
+import { Tetrominos } from "Tetrominos"
+import { tetrominoIndicesModule } from "store/modules/TetrominoIndices"
 
 @Component
 export default class Hold extends Vue {

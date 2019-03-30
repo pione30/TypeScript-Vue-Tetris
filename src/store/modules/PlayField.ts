@@ -1,9 +1,9 @@
-import store from "../"
+import store from "store"
 import { Module, VuexModule, Mutation, Action, getModule } from "vuex-module-decorators"
-import { Tetrominos } from "../../Tetrominos"
-import { levelScoreModule } from "./LevelScore"
-import { intervalModule } from "./Interval"
-import { tetrominoIndicesModule } from "./TetrominoIndices"
+import { Tetrominos } from "Tetrominos"
+import { levelScoreModule } from "store/modules/LevelScore"
+import { intervalModule } from "store/modules/Interval"
+import { tetrominoIndicesModule } from "store/modules/TetrominoIndices"
 
 @Module({ dynamic: true, store, name: "playfield" })
 class PlayField extends VuexModule {

@@ -1,5 +1,6 @@
 const path = require("path")
 const VueLoaderPlugin = require("vue-loader/lib/plugin")
+const TsconfigPathsPlugin = require("tsconfig-paths-webpack-plugin")
 
 module.exports = {
   entry: "./src/index.ts",
@@ -53,6 +54,11 @@ module.exports = {
     extensions: [".ts", ".js", ".vue", ".json"],
     alias: {
       vue$: "vue/dist/vue.runtime.esm.js"
-    }
+    },
+    plugins: [
+      new TsconfigPathsPlugin({
+        configFile: "./tsconfig.json"
+      })
+    ]
   }
 }

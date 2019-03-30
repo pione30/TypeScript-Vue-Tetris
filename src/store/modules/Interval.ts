@@ -1,4 +1,4 @@
-import store from "../"
+import store from "store"
 import { Module, VuexModule, Mutation, Action, getModule } from "vuex-module-decorators"
 
 @Module({ dynamic: true, store, name: "interval" })
