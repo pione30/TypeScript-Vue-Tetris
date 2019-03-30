@@ -13,10 +13,10 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator"
-import Hold from "./Hold.vue"
-import PlayField from "./PlayField.vue"
-import NextPreview from "./NextPreview.vue"
-import MobileController from "./MobileController.vue"
+import Hold from "components/Hold.vue"
+import PlayField from "components/PlayField.vue"
+import NextPreview from "components/NextPreview.vue"
+import MobileController from "components/MobileController.vue"
 
 @Component({
   components: {

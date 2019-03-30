@@ -13,7 +13,7 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator"
-import { levelScoreModule } from "../store/modules/LevelScore"
+import { levelScoreModule } from "store/modules/LevelScore"
 
 @Component
 export default class LevelScore extends Vue {

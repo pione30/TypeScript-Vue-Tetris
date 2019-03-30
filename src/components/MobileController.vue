@@ -35,7 +35,7 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from "vue-property-decorator"
-import { playFieldModule } from "../store/modules/PlayField"
+import { playFieldModule } from "store/modules/PlayField"
 
 @Component
 export default class MobileController extends Vue {

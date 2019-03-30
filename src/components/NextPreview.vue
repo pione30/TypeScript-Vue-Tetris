@@ -10,10 +10,10 @@
 
 <script lang="ts">
 import { Vue, Component, Watch } from "vue-property-decorator"
-import LevelScore from "./LevelScore.vue"
-import Tetromino from "../@types/Tetromino"
-import { Tetrominos } from "../Tetrominos"
-import { tetrominoIndicesModule } from "../store/modules/TetrominoIndices"
+import LevelScore from "components/LevelScore.vue"
+import Tetromino from "@types/Tetromino"
+import { Tetrominos } from "Tetrominos"
+import { tetrominoIndicesModule } from "store/modules/TetrominoIndices"
 
 @Component({
   components: {

@@ -1,7 +1,7 @@
-import store from "../"
+import store from "store"
 import { Module, VuexModule, Mutation, Action, getModule } from "vuex-module-decorators"
-import { Tetrominos } from "../../Tetrominos"
-import { shuffle } from "../../Algorhythms"
+import { Tetrominos } from "Tetrominos"
+import { shuffle } from "Algorhythms"
 
 @Module({ dynamic: true, store, name: "tetrominoindices" })
 class TetrominoIndices extends VuexModule {

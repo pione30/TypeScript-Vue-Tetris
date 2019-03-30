@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import Tetromino from "./@types/Tetromino"
+import Tetromino from "@types/Tetromino"
 export const Tetrominos: Tetromino[] = [
   {
     name: "I",
