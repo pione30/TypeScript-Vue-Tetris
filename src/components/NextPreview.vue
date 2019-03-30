@@ -11,7 +11,7 @@
 <script lang="ts">
 import { Vue, Component, Watch } from "vue-property-decorator"
 import LevelScore from "components/LevelScore.vue"
-import Tetromino from "@types/Tetromino"
+import Tetromino from "typings/Tetromino"
 import { Tetrominos } from "Tetrominos"
 import { tetrominoIndicesModule } from "store/modules/TetrominoIndices"
 
