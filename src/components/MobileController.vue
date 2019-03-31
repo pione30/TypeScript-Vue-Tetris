@@ -127,8 +127,8 @@ export default class MobileController extends Vue {
 
   .hold {
     width: 150px;
-    height: 30px;
-    margin: 30px 2px 30px;
+    height: 35px;
+    margin: 30px 2px 20px;
   }
 
   .L {
