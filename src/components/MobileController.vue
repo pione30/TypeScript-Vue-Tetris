@@ -127,8 +127,8 @@ export default class MobileController extends Vue {
 
   .hold {
     width: 150px;
-    height: 30px;
-    margin: 30px 2px 30px;
+    height: 35px;
+    margin: 30px 2px 20px;
   }
 
   .L {
@@ -140,10 +140,10 @@ export default class MobileController extends Vue {
   }
 
   .circle {
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
     border-radius: 20px;
-    margin: 8px;
+    margin: 3px;
   }
 }
 @media screen and (min-width: 1000px) {
