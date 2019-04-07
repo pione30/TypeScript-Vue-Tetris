@@ -4,5 +4,6 @@ import "core-js"
 
 new Vue({
   el: "#app",
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   render: h => h(TetrisComponent)
 })
