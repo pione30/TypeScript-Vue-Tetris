@@ -19,11 +19,13 @@ class PlayField extends VuexModule {
 
   private isHoldTetrominoUsed: boolean = false
 
-  private isBlockFilled: boolean[][] = Array.from(new Array(this.fieldHeight), () =>
-    new Array(this.fieldWidth).fill(false)
+  private isBlockFilled: boolean[][] = Array.from(
+    new Array(this.fieldHeight),
+    (): boolean[] => new Array(this.fieldWidth).fill(false)
   )
-  private colorBoard: string[][] = Array.from(new Array(this.fieldHeight), () =>
-    new Array(this.fieldWidth).fill("white")
+  private colorBoard: string[][] = Array.from(
+    new Array(this.fieldHeight),
+    (): string[] => new Array(this.fieldWidth).fill("white")
   )
 
   private canvasContainer: HTMLElement = document.getElementById(
@@ -293,7 +295,7 @@ class PlayField extends VuexModule {
     for (const [y, row] of this.isBlockFilled.entries()) {
       if (y === 0 || y === this.fieldHeight - 1) continue
 
-      if (row.every(blockIsFilled => blockIsFilled)) {
+      if (row.every((blockIsFilled): boolean => blockIsFilled)) {
         filledLineIndices.push(y)
       }
     }
