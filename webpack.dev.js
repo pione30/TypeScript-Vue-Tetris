@@ -1,3 +1,4 @@
+const path = require("path")
 const merge = require("webpack-merge")
 const common = require("./webpack.common.js")
 
@@ -5,7 +6,7 @@ module.exports = merge(common, {
   mode: "development",
   devServer: {
     index: "index.html",
-    publicPath: "/dist/",
+    contentBase: path.resolve(__dirname, "./dist"),
     historyApiFallback: true
   },
   performance: {
