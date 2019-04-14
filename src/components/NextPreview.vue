@@ -104,8 +104,4 @@ export default class NextPreview extends Vue {
   height: 100%;
   width: 100%;
 }
-
-.level-score {
-  margin: 40px 0px;
-}
 </style>

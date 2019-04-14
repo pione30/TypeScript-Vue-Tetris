@@ -5,7 +5,7 @@
       <play-field class="inline-block" />
       <div class="inline-block">
         <next-preview />
-        <level-score class="level-score" />
+        <level-score />
       </div>
     </div>
     <div>
