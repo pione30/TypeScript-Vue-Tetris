@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="level-score">
     <p>
       LEVEL <br />
       {{ level }}
@@ -31,5 +31,9 @@ export default class LevelScore extends Vue {
   p {
     margin: 10px 0 10px;
   }
+}
+
+.level-score {
+  margin: 40px 0px;
 }
 </style>
