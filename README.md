@@ -8,8 +8,8 @@ Play here: https://quizzical-hamilton-e9e889.netlify.com/
 
 ## How To Play
 
-  - Left / Down / Right arrow or S / D / F : Move tetrimino
-  - Up arrow or E : Hard drop
+  - Left / Down / Right arrow or A / S / D : Move tetrimino
+  - Up arrow or W : Hard drop
   - J : Rotate left
   - K : Rotate right
   - R or U : Hold
