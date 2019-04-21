@@ -123,7 +123,7 @@ export default class PlayField extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 $field_width: 22;
 $field_height: 12;
 
