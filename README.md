@@ -4,7 +4,7 @@
 
 Play here: https://quizzical-hamilton-e9e889.netlify.com/
 
-**No ARE, No T-Spin.** Somehow similar to Classic NES Tetris :)
+**No ARE, No Modern T-Spin.** Somehow similar to Classic NES Tetris :)
 
 ## How To Play
 
