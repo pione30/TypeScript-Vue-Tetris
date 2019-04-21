@@ -31,29 +31,29 @@ export default class PlayField extends Vue {
   tetriminoController: (event: KeyboardEvent) => void = event => {
     switch (event.keyCode) {
       case 37:
-      case 83:
-        // Left or S
+      case 65:
+        // Left or A
         event.preventDefault()
         playFieldModule.moveLeft()
         break
 
       case 38:
-      case 69:
-        // Up or E
+      case 87:
+        // Up or W
         event.preventDefault()
         playFieldModule.hardDrop()
         break
 
       case 39:
-      case 70:
-        // Right or F
+      case 68:
+        // Right or D
         event.preventDefault()
         playFieldModule.moveRight()
         break
 
       case 40:
-      case 68:
-        // Down or D
+      case 83:
+        // Down or S
         event.preventDefault()
         playFieldModule.moveDown()
         break
