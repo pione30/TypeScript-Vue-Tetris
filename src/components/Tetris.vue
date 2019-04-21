@@ -34,7 +34,7 @@ import MobileController from "components/MobileController.vue"
 export default class TetrisComponent extends Vue {}
 </script>
 
-<style>
+<style scoped>
 #tetris-component {
   text-align: center;
 }

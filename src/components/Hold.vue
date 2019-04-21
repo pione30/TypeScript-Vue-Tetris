@@ -73,7 +73,7 @@ export default class Hold extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @media screen and (min-width: 320px) {
   .label {
     margin: 10px 10px 10px;
