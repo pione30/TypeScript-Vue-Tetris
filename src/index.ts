@@ -1,3 +1,4 @@
+import "styles/style.css"
 import Vue from "vue"
 import TetrisComponent from "components/Tetris.vue"
 import "core-js/stable/array"
